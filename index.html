@@ -71,7 +71,13 @@ h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); 
 </div>
 
 <script>
-let username = "Adventurer";
+let username = localStorage.getItem("gauntletUser");
+
+if (!username) {
+    username = prompt("Identify yourself, Adventurer:", "Hero");
+    if (!username) username = "Adventurer"; // Fallback if they hit cancel
+    localStorage.setItem("gauntletUser", username);
+}
 let startTime = Date.now();
 let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
 let currentQuestion;
