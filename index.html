@@ -78,6 +78,15 @@ font-size:20px;
 let room = 1
 let currentQuestion
 
+let usedQuestions = {
+easy: [],
+medium: [],
+hard: [],
+easyBoss: [],
+mediumBoss: [],
+finalBoss: []
+}
+
 const questionBanks = {
 
 easy:[
@@ -99,6 +108,28 @@ easy:[
 {q:"Consumers maximize utility where...",options:["Indifference curve is tangent to budget line","Income is highest","Prices are equal","Demand is highest"],a:0},
 
 {q:"Marginal rate of substitution represents...",options:["Rate consumers trade one good for another","Price ratio","Income ratio","Demand elasticity"],a:0}
+
+{q:"A complete preference ordering means...",options:["Consumers can compare any two bundles","Consumers always prefer cheaper goods","Consumers never change preferences","Consumers prefer equal bundles"],a:0},
+
+{q:"Transitive preferences imply...",options:["If A is preferred to B and B to C, then A is preferred to C","Consumers prefer cheaper goods","Income increases utility automatically","Demand curves shift"],a:0},
+
+{q:"If two bundles lie on the same indifference curve...",options:["They provide equal utility","They cost the same","They contain equal goods","They maximize income"],a:0},
+
+{q:"Indifference curves are typically downward sloping because...",options:["Consumers trade one good for another","Prices fall","Income increases","Demand increases"],a:0},
+
+{q:"Convex indifference curves imply...",options:["Diminishing marginal rate of substitution","Increasing marginal cost","Constant utility","Perfect substitutes"],a:0},
+
+{q:"If the price of good X falls, the budget constraint...",options:["Rotates outward on the X-axis","Shifts outward parallel","Shifts inward","Becomes vertical"],a:0},
+
+{q:"Bundles outside the budget constraint are...",options:["Unaffordable","Optimal","Preferred","Efficient"],a:0},
+
+{q:"Bundles inside the budget constraint are...",options:["Affordable but not utility maximizing","Impossible","Always optimal","Always inefficient"],a:0},
+
+{q:"Utility maximization occurs where...",options:["MRS equals the price ratio","Demand equals supply","Income equals spending","Marginal utility is zero"],a:0},
+
+{q:"If the marginal rate of substitution exceeds the price ratio...",options:["The consumer should consume more of good X","The consumer should consume less of good X","Utility falls","Income changes"],a:0},
+
+{q:"A steeper indifference curve indicates...",options:["Higher willingness to trade Y for X","Lower utility","Higher income","Lower demand"],a:0}
 
 ],
 
@@ -122,6 +153,20 @@ medium:[
 
 {q:"A demand curve shifts when...",options:["Income or preferences change","Price changes","Supply changes","Markets disappear"],a:0}
 
+{q:"The substitution effect of a price decrease always...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Depends on income"],a:0},
+
+{q:"The income effect of a price decrease for a normal good...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Reduces welfare"],a:0},
+
+{q:"For an inferior good, the income effect of a price decrease...",options:["Reduces quantity demanded","Increases quantity demanded","Is always zero","Creates surplus"],a:0},
+
+{q:"A Giffen good occurs when...",options:["Income effect outweighs substitution effect","Substitution effect dominates","Demand becomes perfectly elastic","Income rises"],a:0},
+
+{q:"If income rises and demand increases, the good is...",options:["Normal","Inferior","Elastic","Substitute"],a:0},
+
+{q:"If the price of coffee rises and demand for tea increases, the goods are...",options:["Substitutes","Complements","Inferior","Normal"],a:0},
+
+{q:"If the price of printers rises and demand for ink falls, the goods are...",options:["Complements","Substitutes","Inferior","Giffen"],a:0}
+
 ],
 
 hard:[
@@ -143,6 +188,20 @@ hard:[
 {q:"Elastic demand implies...",options:["Large quantity response to price change","Small quantity response","No quantity response","Infinite supply"],a:0},
 
 {q:"Market demand becomes flatter when...",options:["More consumers enter the market","Costs rise","Firms exit","Supply shifts"],a:0}
+
+{q:"Price elasticity of demand equals...",options:["Percent change in quantity divided by percent change in price","Price divided by quantity","Demand divided by supply","Income divided by price"],a:0},
+
+{q:"If elasticity equals 1, demand is...",options:["Unit elastic","Perfectly elastic","Inelastic","Vertical"],a:0},
+
+{q:"When demand is elastic, a price decrease will...",options:["Increase total revenue","Decrease total revenue","Leave revenue unchanged","Eliminate demand"],a:0},
+
+{q:"When demand is inelastic, a price increase will...",options:["Increase total revenue","Decrease total revenue","Leave revenue unchanged","Reduce profit"],a:0},
+
+{q:"Consumer surplus represents...",options:["Willingness to pay minus price","Price minus cost","Total revenue","Producer surplus"],a:0},
+
+{q:"A price decrease increases consumer surplus because...",options:["More consumers buy and existing consumers pay less","Income rises","Supply increases","Costs fall"],a:0},
+
+{q:"Market demand is obtained by...",options:["Horizontal summation of individual demands","Vertical summation","Averaging prices","Multiplying quantities"],a:0}
 
 ],
 
@@ -171,10 +230,23 @@ return "finalBoss"
 
 }
 
-function randomQuestion(set){
+function randomQuestion(poolName){
 
-return set[Math.floor(Math.random()*set.length)]
+let pool = questionBanks[poolName]
+let used = usedQuestions[poolName]
 
+let available = pool.filter(q => !used.includes(q))
+
+if(available.length === 0){
+usedQuestions[poolName] = []
+available = pool
+}
+
+let question = available[Math.floor(Math.random()*available.length)]
+
+usedQuestions[poolName].push(question)
+
+return question
 }
 
 function updateProgress(){
@@ -236,7 +308,7 @@ updateMazeTrack()
 
 let diff=difficulty()
  
-let q=randomQuestion(questionBanks[diff])
+let q=randomQuestion(diff)
 
 currentQuestion=q
 
