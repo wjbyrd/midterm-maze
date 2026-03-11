@@ -4,7 +4,7 @@
 <title>The Microeconomics Gauntlet</title>
   
 <style>
-
+  
 body{
 font-family:Arial;
 background:radial-gradient(circle at center, #111827 0%, #020617 80%),
@@ -15,6 +15,14 @@ margin:0;
 padding:0;
 }
 
+@keyframes torchFlicker {
+0%   { filter: brightness(1); }
+25%  { filter: brightness(1.05); }
+50%  { filter: brightness(0.97); }
+75%  { filter: brightness(1.04); }
+100% { filter: brightness(1); }
+}
+  
 #gameBox{
 width:750px;
 margin:auto;
@@ -26,8 +34,9 @@ box-shadow:
 0 0 40px rgba(0,0,0,0.8),
 inset 0 0 30px rgba(0,0,0,0.6);
 border:1px solid rgba(255,255,255,0.05);
+animation: torchFlicker 6s infinite;
 }
-
+ 
 button{
 padding:12px 22px;
 margin:8px;
