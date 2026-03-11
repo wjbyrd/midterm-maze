@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Midterm Maze</title>
+
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+#gameBox{
+width:700px;
+margin:auto;
+padding:20px;
+background:#222;
+border-radius:10px;
+}
+
+button{
+padding:10px 18px;
+margin:8px;
+font-size:16px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameBox">
+
+<h2>Midterm Maze</h2>
+
+<p id="level">Level: Easy</p>
+
+<p id="question"></p>
+
+<div id="answers"></div>
+
+<p id="message"></p>
+
+</div>
+
+<script>
+
+let level="easy"
+let questionIndex=0
+
+const mazeQuestions={
+
+easy:[
+{q:"If price rises, quantity demanded usually...",options:["Falls","Rises","Does nothing","Doubles"],a:0},
+{q:"Demand curves slope...",options:["Up","Down","Sideways","Circular"],a:1},
+{q:"Opportunity cost means...",options:["Lost alternative","Money price","Profit","Demand shift"],a:0}
+],
+
+medium:[
+{q:"An inferior good experiences...",options:["Demand falls when income rises","Demand rises when income rises","No change","Perfect elasticity"],a:0},
+{q:"Elastic demand means...",options:["Quantity very responsive","Quantity unresponsive","Supply shifts","Price fixed"],a:0}
+],
+
+hard:[
+{q:"If demand is elastic and price rises...",options:["Revenue rises","Revenue falls","Revenue unchanged","Revenue doubles"],a:1},
+{q:"Marginal cost intersects average cost at...",options:["Minimum AC","Maximum AC","Demand curve","Profit"],a:0}
+]
+
+}
+
+function loadQuestion(){
+
+let set=mazeQuestions[level]
+let q=set[questionIndex]
+
+document.getElementById("level").innerText="Level: "+level
+document.getElementById("question").innerText=q.q
+
+let html=""
+
+q.options.forEach((opt,i)=>{
+html+=`<button onclick="answer(${i})">${opt}</button>`
+})
+
+document.getElementById("answers").innerHTML=html
+
+}
+
+function answer(choice){
+
+let q=mazeQuestions[level][questionIndex]
+
+if(choice===q.a){
+
+questionIndex++
+
+if(questionIndex>=mazeQuestions[level].length){
+
+if(level==="easy"){level="medium"}
+else if(level==="medium"){level="hard"}
+else{
+document.getElementById("message").innerText="You escaped the maze!"
+return
+}
+
+questionIndex=0
+}
+
+document.getElementById("message").innerText="Correct!"
+
+}else{
+
+document.getElementById("message").innerText="Wrong! Back to Easy."
+
+level="easy"
+questionIndex=0
+}
+
+loadQuestion()
+
+}
+
+loadQuestion()
+
+</script>
+
+</body>
+</html>
