@@ -548,7 +548,7 @@ room = Math.min(room,30)
 if(room>30){
 
 document.getElementById("mazeTrack").classList.add("victory");
-  
+
 let code = generateCode();
 
 // calculate time
@@ -562,14 +562,14 @@ let timeString = minutes + "m " + remaining + "s";
 // clear saved progress
 localStorage.removeItem("gauntletRoom");
 
-if(room>30){
-
-let code = generateCode();
-  
+// animate crown tile
 let track = document.getElementById("mazeTrack");
+if(track.lastChild){
 track.lastChild.classList.add("victory");
+}
 
-document.getElementById("question").innerHTML="<h2>You have conquered the Microeconomics Gauntlet!</h2>";
+document.getElementById("question").innerHTML =
+"<h2>You have conquered the Microeconomics Gauntlet!</h2>";
 
 document.getElementById("answers").innerHTML="";
 
@@ -580,7 +580,6 @@ document.getElementById("message").innerHTML =
 "Enter this information into the Canvas bonus quiz to claim your points.";
 
 return;
-}
 
 }else{
 
