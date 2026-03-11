@@ -395,22 +395,40 @@ document.getElementById("message").innerText="Correct!"
 }
 room = Math.min(room,31) 
 }
-
 if(room > 30){
-document.getElementById("bossMessage").innerText = "";
-document.getElementById("roomDisplay").innerText = "";
-document.getElementById("mazeTrack").classList.add("victory");
-let code = generateCode();
-let endTime = Date.now();
-let seconds = Math.floor((endTime - startTime)/1000);
-let minutes = Math.floor(seconds/60);
-let remaining = seconds % 60;
-let timeString = minutes + "m " + remaining + "s";
-localStorage.removeItem("gauntletRoom");
-document.getElementById("question").innerHTML = "<h2>You have conquered the Microeconomics Gauntlet!</h2>";
-document.getElementById("answers").innerHTML="";
-document.getElementById("message").innerHTML = "<strong>Username:</strong> " + username + "<br>" + "<strong>Time:</strong> " + timeString + "<br>" + "<strong>Completion Code:</strong> " + code + "<br><br>" + "Enter this information into the Canvas bonus quiz to claim your points.";
-return;
+    // Clear the lingering room and boss text
+    document.getElementById("roomDisplay").innerText = "";
+    document.getElementById("bossMessage").innerText = "";
+
+    document.getElementById("mazeTrack").classList.add("victory");
+    
+    // Ensure the maze track is centered and clean
+    document.getElementById("mazeTrack").style.textAlign = "center";
+
+    let code = generateCode();
+
+    // Calculate time
+    let endTime = Date.now();
+    let seconds = Math.floor((endTime - startTime)/1000);
+    let minutes = Math.floor(seconds/60);
+    let remaining = seconds % 60;
+    let timeString = minutes + "m " + remaining + "s";
+
+    // Clear saved progress
+    localStorage.removeItem("gauntletRoom");
+
+    document.getElementById("question").innerHTML =
+    "<h2>You have conquered the Microeconomics Gauntlet!</h2>";
+
+    document.getElementById("answers").innerHTML="";
+
+    document.getElementById("message").innerHTML =
+    "<strong>Username:</strong> " + username + "<br>" +
+    "<strong>Time:</strong> " + timeString + "<br>" +
+    "<strong>Completion Code:</strong> <span style='color:#fbbf24; font-size:20px;'>" + code + "</span><br><br>" +
+    "Enter this information into the Canvas bonus quiz to claim your points.";
+
+    return;
 }
 } else {
 let setback=0
