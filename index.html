@@ -46,9 +46,10 @@ transform:translateY(-2px);
 }
 
 #mazeTrack{
-font-size:22px;
-letter-spacing:3px;
+font-size:20px;
+letter-spacing:1px;
 margin-bottom:10px;
+text-shadow:0 0 6px rgba(255,255,255,0.15);
 }
   
 #progressBar{
@@ -63,7 +64,7 @@ overflow:hidden;
 #progressFill{
 height:100%;
 width:0%;
-background:linear-gradient(90deg,#22c55e,#16a34a);
+background:linear-gradient(90deg,#60a5fa,#3b82f6);
 transition:width 0.4s ease;
 }
 
@@ -103,6 +104,9 @@ animation:shake 0.4s ease;
 <div id="gameBox">
 
 <h2>The Microeconomics Gauntlet</h2>
+  <p style="opacity:.7;margin-top:-10px;">
+Battle through consumer theory to prepare for the exam
+</p>
 
 <div id="progressBar">
 <div id="progressFill"></div>
@@ -323,12 +327,12 @@ for(let i=1;i<=30;i++){
 
 let icon="⬛";
 
-if(i < room){
-icon="🟩";
+if(i === room){
+icon="🟥";
 }
 
-else if(i === room){
-icon="🟥";
+else if(i < room){
+icon="🟩";
 }
 
 else if((i === 10 || i === 20) && i >= room){
@@ -339,6 +343,10 @@ else if(i === 30 && i >= room){
 icon="👑";
 }
 
+#mazeTrack span{
+font-size:22px;
+}
+  
 track += icon + " ";
 
 }
