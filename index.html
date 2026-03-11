@@ -2,7 +2,6 @@
 <html>
 <head>
 <title>The Microeconomics Gauntlet</title>
-  
 <style>
 body{
 font-family:Arial;
@@ -13,7 +12,6 @@ text-align:center;
 margin:0;
 padding:0;
 }
-
 @keyframes torchFlicker {
 0%   { filter: brightness(1); }
 25%  { filter: brightness(1.05); }
@@ -21,7 +19,6 @@ padding:0;
 75%  { filter: brightness(1.04); }
 100% { filter: brightness(1); }
 }
-  
 #gameBox{
 width:750px;
 margin:auto;
@@ -33,48 +30,31 @@ box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.6);
 border:1px solid rgba(255,255,255,0.05);
 animation: torchFlicker 6s infinite;
 }
- 
 button{
 padding:12px 22px; margin:8px; font-size:16px; cursor:pointer;
 background:#374151; color:white; border:none; border-radius:8px; transition:all 0.2s ease;
 }
-
 button:hover{ background:#4b5563; transform:translateY(-2px); }
-
 h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); }
-  
 #mazeTrack{ font-size:22px; line-height:32px; letter-spacing:2px; margin-bottom:10px; display: inline-block; text-shadow:0 0 10px rgba(34,197,94,0.6); }
-  
 #progressBar{ width:100%; height:22px; background:#2d3748; border-radius:12px; margin-bottom:20px; overflow:hidden; }
-
 #progressFill{ height:100%; width:0%; background:linear-gradient(90deg,#f59e0b,#ef4444); transition:width 0.4s ease; }
-
-.boss{ color:#fbbf24; line-height:1.8; font-weight:bold; font-size:22px; text-shadow:0 0 8px rgba(251,191,36,0.7); }
-
+.boss-title { font-size: 28px; font-weight: bold; margin-bottom: 15px; display: block; }
+.boss-q { font-style: italic; font-size: 19px; border-left: 4px solid var(--bossColor); padding-left: 15px; margin: 20px 0; text-align: left; }
 @keyframes bossFlash { 0% { background:var(--bossColor,#7f1d1d); } 100% { background:#1f2937; } }
-
 @keyframes shake { 0% { transform:translateX(0); } 25% { transform:translateX(-6px); } 50% { transform:translateX(6px); } 75% { transform:translateX(-4px); } 100% { transform:translateX(0); } }
-
-#bossMessage{ color:#f59e0b; font-weight:bold; margin-bottom:8px; text-shadow:0 0 8px rgba(245,158,11,0.6); }
-  
+#bossMessage{ color:#f59e0b; font-weight:bold; margin-bottom:8px; }
 .bossFlash{ animation:bossFlash 0.6s ease; }
 .shake{ animation:shake 0.4s ease; }
-
-@keyframes victoryGlow { 0% { transform:scale(1); text-shadow:0 0 10px gold; } 50% { transform:scale(1.3); text-shadow:0 0 25px gold,0 0 40px orange; } 100% { transform:scale(1); text-shadow:0 0 10px gold; } }
-
 .victory{ animation:victoryGlow 1s ease-in-out 3; }  
 </style>
 </head>
-
 <body>
 <div id="gameBox">
 <h2>The Microeconomics Gauntlet</h2>
-  <p id="playerName"></p>
-  <p style="opacity:.7;margin-top:-10px;">Battle through consumer theory to prepare for the exam</p>
-
+<p id="playerName"></p>
 <div id="progressBar"><div id="progressFill"></div></div>
 <div id="mazeTrack"></div>
-  
 <p id="roomDisplay"></p>
 <p id="bossMessage"></p>
 <p id="question"></p>
@@ -83,69 +63,49 @@ h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); 
 </div>
 
 <script>
-// ----- PLAYER PROFILE & SETUP -----
-let username = localStorage.getItem("gauntletUser");
-if(!username){
-    username = prompt("Choose a username for the leaderboard:");
-    username = (username || "Player").substring(0,20).replace(/[^a-zA-Z0-9_]/g,"");
-    localStorage.setItem("gauntletUser", username);
-}
-
+let username = localStorage.getItem("gauntletUser") || "Player";
 let startTime = Date.now();
 let savedRoom = localStorage.getItem("gauntletRoom");
 let room = savedRoom ? parseInt(savedRoom) : 1;
-
-if(savedRoom && savedRoom > 1){
-    if(!confirm("Resume your previous run at Room " + savedRoom + "?")){
-        localStorage.removeItem("gauntletRoom");
-        room = 1;
-    }
-}
-  
 let currentQuestion;
-let usedQuestions = { easy: [], medium: [], hard: [], easyBoss: [], mediumBoss: [], finalBoss: [] };
+let usedQuestions = { easy:[], medium:[], hard:[], easyBoss:[], mediumBoss:[], finalBoss:[] };
 
-// ----- RANDOM MATH GENERATORS -----
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+// --- MATH GENERATORS FOR ROOMS 26-29 ---
 function getMUPerDollar() {
-    let MU = rand(20, 80); let P = rand(2, 10);
+    let MU = rand(20, 80), P = rand(2, 10);
     let correct = Math.round((MU / P) * 10) / 10;
-    let options = [correct, Math.round((correct + 1.5) * 10) / 10, Math.round(Math.abs(correct - 1.2) * 10) / 10, Math.round((MU / (P + 1)) * 10) / 10];
-    options = shuffleArray([...new Set(options)]);
-    while(options.length < 4) { options.push(Math.round(rand(1, 10) * 10) / 10); }
-    return { q: `Room 26: If the Marginal Utility (MU) of a good is ${MU} and the price is $${P}, what is the marginal utility per dollar?`, options: options.map(o => o.toString()), a: options.indexOf(correct) };
+    let opts = shuffleArray([...new Set([correct, Math.round((correct+1.5)*10)/10, Math.round(Math.abs(correct-1.2)*10)/10, 4.0])]);
+    return { q: `A consumer receives Marginal Utility (MU) of ${MU} from a good priced at $${P}. What is the marginal utility per dollar?`, options: opts.map(o=>o.toString()), a: opts.indexOf(correct) };
 }
+
 
 
 function getOptimalBundle() {
-    let Px = rand(2, 6); let Py = rand(2, 6);
-    let MUx = rand(12, 36);
+    let Px = rand(2, 5), Py = rand(2, 5), MUx = rand(10, 30);
     let correctMUy = (MUx / Px) * Py;
-    let options = [correctMUy, correctMUy + 4, Math.abs(correctMUy - 6), correctMUy * 2];
-    options = shuffleArray([...new Set(options)]);
-    while(options.length < 4) { options.push(rand(10, 50)); }
-    return { q: `Room 27: A consumer is maximizing utility. If Px = $${Px}, Py = $${Py}, and MUx = ${MUx}, what must MUy be?`, options: options.map(o => o.toString()), a: options.indexOf(correctMUy) };
+    let opts = shuffleArray([...new Set([correctMUy, correctMUy + 5, Math.abs(correctMUy - 2), 10])]);
+    return { q: `At the optimal bundle, MUx = ${MUx}, Px = $${Px}, and Py = $${Py}. What must MUy be for the consumer to be maximizing utility?`, options: opts.map(o=>o.toString()), a: opts.indexOf(correctMUy) };
 }
+
 
 
 function getConsumerSurplus() {
-    let wtp = rand(55, 95); let price = rand(15, 45);
+    let wtp = rand(60, 100), price = rand(20, 50);
     let correct = wtp - price;
-    let options = [correct, wtp, price, wtp + price];
-    options = shuffleArray([...new Set(options)]);
-    return { q: `Room 28: A buyer is willing to pay $${wtp} for a product but the market price is $${price}. What is the consumer surplus?`, options: options.map(o => o.toString()), a: options.indexOf(correct) };
+    let opts = shuffleArray([...new Set([correct, wtp, price, wtp + price])]);
+    return { q: `A consumer is willing to pay $${wtp} for a new video game, but the market price is only $${price}. What is the consumer surplus?`, options: opts.map(o=>o.toString()), a: opts.indexOf(correct) };
 }
 
 function getElasticity() {
-    let pctQ = rand(10, 40); let pctP = rand(5, 20);
+    let pctQ = rand(10, 30), pctP = rand(5, 15);
     let correct = Math.round((pctQ / pctP) * 100) / 100;
-    let options = [correct, Math.round((pctP / pctQ) * 100) / 100, 1.0, 0.5];
-    options = shuffleArray([...new Set(options)]);
-    return { q: `Room 29: If price changes by ${pctP}% and quantity demanded changes by ${pctQ}%, what is the price elasticity of demand?`, options: options.map(o => o.toString()), a: options.indexOf(correct) };
+    let opts = shuffleArray([...new Set([correct, Math.round((pctP/pctQ)*100)/100, 1.0, 2.0])]);
+    return { q: `If the price of a good falls by ${pctP}% and the quantity demanded rises by ${pctQ}%, what is the price elasticity of demand?`, options: opts.map(o=>o.toString()), a: opts.indexOf(correct) };
 }
 
-// ----- STATIC QUESTION BANKS -----
+// --- FULL RESTORED QUESTION BANKS (Including True Boss Questions) ---
 const questionBanks = {
 easy:[
 {q:"A theory of choice assumes individuals...",options:["Make random decisions","Choose the most preferred affordable bundle","Always maximize income","Always minimize work"],a:1},
@@ -217,29 +177,24 @@ hard:[
 {q:"The income effect occurs because...",options:["A price change alters purchasing power","Prices change utility","Consumers prefer cheaper goods","Demand shifts randomly"],a:0},
 {q:"For a Giffen good...",options:["Income effect outweighs substitution effect","Demand always rises","Substitution effect dominates","Price has no effect"],a:0}
 ],
-easyBoss:[{q:"Utility maximization occurs where the marginal rate of substitution equals...",options:["Price ratio","Income","Demand","Consumer surplus"],a:0}],
-mediumBoss:[{q:"The substitution effect of a price decrease always...",options:["Increases quantity demanded","Decreases quantity demanded","Does nothing","Depends on income"],a:0}],
-finalBoss:[{q:"If demand is elastic and price falls, total revenue will...",options:["Increase","Decrease","Stay constant","Become zero"],a:0}]
+easyBoss:[{q:"The 'Law of Diminishing Marginal Utility' implies that as consumption of a good increases...",options:["Total utility eventually decreases","Marginal utility eventually decreases","Price must fall","Demand becomes vertical"],a:1}],
+mediumBoss:[{q:"If the substitution effect and income effect move in opposite directions, and the substitution effect is stronger, the good is...",options:["Normal","Inferior (non-Giffen)","A Giffen good","A perfect complement"],a:1}],
+finalBoss:[{q:"In the region of a demand curve where demand is inelastic, a price increase will cause total revenue to...",options:["Increase","Decrease","Remain unchanged","Drop to zero"],a:0}]
 };
 
 function difficulty(){
-    if(room<=9) return "easy";
-    if(room==10) return "easyBoss";
-    if(room<=19) return "medium";
-    if(room==20) return "mediumBoss";
-    if(room<=29) return "hard";
-    return "finalBoss";
+    if(room<=9) return "easy"; if(room==10) return "easyBoss";
+    if(room<=19) return "medium"; if(room==20) return "mediumBoss";
+    if(room<=29) return "hard"; return "finalBoss";
 }
 
 function randomQuestion(poolName){
-    // CALCULATIONS CORRIDOR: Forces specific randomized questions for 26-29
     if(poolName === "hard"){
         if(room === 26) return getMUPerDollar();
         if(room === 27) return getOptimalBundle();
         if(room === 28) return getConsumerSurplus();
         if(room === 29) return getElasticity();
     }
-
     let pool = questionBanks[poolName];
     let used = usedQuestions[poolName];
     let available = pool.filter(q => !used.includes(q));
@@ -249,98 +204,68 @@ function randomQuestion(poolName){
     return question;
 }
 
-function updateProgress(){ document.getElementById("progressFill").style.width=(room/30*100)+"%"; }
-
-function shuffleArray(arr){
-    for(let i = arr.length - 1; i > 0; i--){
-        let j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-function generateCode(){ return "MAZE-" + Math.floor(1000 + Math.random()*9000); }
-
 function updateMazeTrack(){
     let track="";
     for(let i=1;i<=30;i++){
-        let icon="⬛";
-        if(i === room){ icon="🟥"; }
-        else if(i < room){ icon="🟩"; }
-        if(i === 10 && i >= room){ icon="⚔ Warden"; }
-        else if(i === 20 && i >= room){ icon="👹 Decomposer"; }
-        else if(i === 30 && i >= room){ icon="👑 Sovereign"; }
+        let icon = (i === room) ? "🟥" : (i < room) ? "🟩" : "⬛";
+        if(i === 10 && i >= room) icon="⚔"; if(i === 20 && i >= room) icon="👹"; if(i === 30 && i >= room) icon="👑";
         track += icon + " ";
-        if(i % 10 === 0){ track += "<br>"; }
+        if(i % 10 === 0) track += "<br>";
     }
     document.getElementById("mazeTrack").innerHTML = track;
 }
-  
+
 function loadQuestion(){
-    updateProgress(); updateMazeTrack();
-    document.getElementById("playerName").innerText = "Adventurer: " + username;
+    updateMazeTrack();
+    document.getElementById("progressFill").style.width=(room/30*100)+"%";
     let diff=difficulty();
     let q=randomQuestion(diff);
     currentQuestion=q;
     document.getElementById("roomDisplay").innerText="Room "+room+" of 30";
-    let bossTitle = ""; let bossColor = "";
-    if(room === 10){ bossTitle = "⚔ Warden of Indifference"; bossColor = "#fbbf24"; }
-    if(room === 20){ bossTitle = "⚔ The Decomposer of Choice"; bossColor = "#a855f7"; }
-    if(room === 30){ bossTitle = "👑 Sovereign of Elasticity"; bossColor = "#ef4444"; }
-
+    
     if(diff.includes("Boss")){
-        document.getElementById("bossMessage").innerText = "⚔ A guardian blocks your path...";
-        document.getElementById("question").innerHTML = '<span class="boss" style="color:'+bossColor+'">'+bossTitle+'</span><br>'+q.q;
-        let box = document.getElementById("gameBox");
-        box.style.setProperty('--bossColor', bossColor);
-        box.classList.add("bossFlash", "shake");
-        setTimeout(()=>{ box.classList.remove("bossFlash", "shake"); },600);
+        let bTitle = room==10?"WARDEN OF INDIFFERENCE":room==20?"THE DECOMPOSER OF CHOICE":"SOVEREIGN OF ELASTICITY";
+        let bColor = room==10?"#fbbf24":room==20?"#a855f7":"#ef4444";
+        document.getElementById("bossMessage").innerText = "⚠ BOSS ENCOUNTER ⚠";
+        document.getElementById("question").innerHTML = `<span class="boss-title" style="color:${bColor}">${bTitle}</span><div class="boss-q" style="--bossColor:${bColor}">${q.q}</div>`;
+        document.getElementById("gameBox").style.setProperty('--bossColor', bColor);
+        document.getElementById("gameBox").classList.add("bossFlash", "shake");
+        setTimeout(()=>document.getElementById("gameBox").classList.remove("bossFlash", "shake"), 600);
     } else {
         document.getElementById("bossMessage").innerText="";
         document.getElementById("question").innerText=q.q;
     }
-
-    let options = q.options.map((opt,i)=>({text:opt,index:i}));
-    options = shuffleArray(options);
-    let html="";
-    options.forEach((opt)=>{ html+=`<button onclick="answer(${opt.index})">${opt.text}</button>`; });
-    document.getElementById("answers").innerHTML=html;
+    
+    let opts = q.options.map((opt,i)=>({text:opt,index:i}));
+    opts = shuffleArray(opts);
+    document.getElementById("answers").innerHTML = opts.map(o=>`<button onclick="answer(${o.index})">${o.text}</button>`).join("");
 }
 
 function answer(choice){
-    let diff=difficulty();
     if(choice===currentQuestion.a){
-        if(diff.includes("Boss")){ room++; }
-        else {
-            let bonusRoll = Math.random();
-            if(room < 5) room++;
-            else if(room >= 10 && room < 30 && bonusRoll < 0.005) room += 3;
-            else if(room < 30 && bonusRoll < 0.015) room += 2;
-            else room++;
-            room = Math.min(room,31); 
-        }
+        room++;
         if(room > 30){
-            updateMazeTrack();
-            document.getElementById("roomDisplay").innerText = "";
-            document.getElementById("bossMessage").innerText = "";
-            document.getElementById("mazeTrack").classList.add("victory");
-            document.getElementById("mazeTrack").style.textAlign = "center";
-            let timeString = Math.floor((Date.now() - startTime)/60000) + "m " + Math.floor(((Date.now() - startTime)/1000)%60) + "s";
+            let code = "MAZE-" + Math.floor(1000 + Math.random()*9000);
+            let time = Math.floor((Date.now()-startTime)/60000)+"m "+Math.floor(((Date.now()-startTime)/1000)%60)+"s";
+            document.getElementById("gameBox").innerHTML = `<h2>CONQUERED!</h2><p>User: ${username}</p><p>Time: ${time}</p><p>Code: <span style='color:#fbbf24; font-size:20px;'>${code}</span></p>`;
             localStorage.removeItem("gauntletRoom");
-            document.getElementById("question").innerHTML = "<h2>You have conquered the Microeconomics Gauntlet!</h2>";
-            document.getElementById("answers").innerHTML="";
-            document.getElementById("message").innerHTML = `<strong>User:</strong> ${username}<br><strong>Time:</strong> ${timeString}<br><strong>Code:</strong> <span style='color:#fbbf24; font-size:20px;'>${generateCode()}</span><br><br>Enter this into Canvas.`;
             return;
         }
         document.getElementById("message").innerText="Correct!";
     } else {
-        let setback = (diff==="easy" || diff==="easyBoss") ? 3 : (diff==="medium") ? 4 : (diff==="mediumBoss") ? 5 : (diff==="hard") ? 5 : 7;
-        room=Math.max(1,room-setback);
-        document.getElementById("message").innerText=`Wrong! Fell back ${setback} rooms.`;
+        let setback = (room >= 26) ? 5 : (difficulty().includes("Boss")) ? 6 : 3;
+        room = Math.max(1, room - setback);
+        document.getElementById("message").innerText=`Incorrect! Fell back ${setback} rooms.`;
     }
     localStorage.setItem("gauntletRoom", room);
     loadQuestion();
 }
+
+function shuffleArray(arr){
+    for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+    return arr;
+}
+
 loadQuestion();
 </script>
 </body>
