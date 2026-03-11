@@ -109,6 +109,7 @@ animation:shake 0.4s ease;
 <div id="gameBox">
 
 <h2>The Microeconomics Gauntlet</h2>
+  <p id="playerName"></p>
   <p style="opacity:.7;margin-top:-10px;">
 Battle through consumer theory to prepare for the exam
 </p>
@@ -130,7 +131,34 @@ Battle through consumer theory to prepare for the exam
 
 <script>
 
-let room = 1
+// ----- PLAYER PROFILE -----
+
+let username = localStorage.getItem("gauntletUser");
+
+if(!username){
+username = prompt("Choose a username for the leaderboard:");
+username = username || "Player";
+username = username.substring(0,20);
+username = username.replace(/[^a-zA-Z0-9_]/g,"");
+localStorage.setItem("gauntletUser", username);
+}
+
+// ----- TIMER -----
+
+let startTime = Date.now();
+
+// ----- LOAD SAVED PROGRESS -----
+
+let savedRoom = localStorage.getItem("gauntletRoom");
+let room = savedRoom ? parseInt(savedRoom) : 1;
+
+if(savedRoom && savedRoom > 1){
+if(!confirm("Resume your previous run at Room " + savedRoom + "?")){
+localStorage.removeItem("gauntletRoom");
+room = 1;
+}
+}
+  
 let currentQuestion
 
 let usedQuestions = {
@@ -365,8 +393,10 @@ function loadQuestion(){
 updateProgress()
 updateMazeTrack()
 
+document.getElementById("playerName").innerText =
+"Adventurer: " + username;
+
 let diff=difficulty()
- 
 let q=randomQuestion(diff)
 
 currentQuestion=q
@@ -478,16 +508,29 @@ if(room>30){
 
 let code = generateCode();
 
-document.getElementById("question").innerHTML="<h2>You have conquered the Microeconomics Gauntlet!</h2>";
+// calculate time
+let endTime = Date.now();
+let seconds = Math.floor((endTime - startTime)/1000);
+let minutes = Math.floor(seconds/60);
+let remaining = seconds % 60;
+
+let timeString = minutes + "m " + remaining + "s";
+
+// clear saved progress
+localStorage.removeItem("gauntletRoom");
+
+document.getElementById("question").innerHTML =
+"<h2>You have conquered the Microeconomics Gauntlet!</h2>";
 
 document.getElementById("answers").innerHTML="";
 
-document.getElementById("message").innerHTML=
-"Completion Code: <strong>"+code+"</strong><br><br>"+
-"Enter this code in the Canvas bonus quiz to claim your points.";
+document.getElementById("message").innerHTML =
+"<strong>Username:</strong> " + username + "<br>" +
+"<strong>Time:</strong> " + timeString + "<br><br>" +
+"<strong>Completion Code:</strong> " + code + "<br><br>" +
+"Enter this information into the Canvas bonus quiz to claim your points.";
 
 return;
-
 }
 
 }else{
@@ -506,9 +549,10 @@ room=Math.max(1,room-setback)
 document.getElementById("message").innerText="Wrong! You fell back "+setback+" rooms."
 
 }
-
+  
+localStorage.setItem("gauntletRoom", room);
+  
 loadQuestion()
-
 }
 
 loadQuestion()
