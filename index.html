@@ -282,7 +282,7 @@ function getElasticityCalc() {
 return {
         q: `When the price of a good increases from $${p1} to $${p2}, the quantity demanded decreases from ${q1} units to ${q2} units. Using the Midpoint (Arc) Method, what is the price elasticity of demand?`,
         options: [
-            `${elasticity} (${isElastic})`, 
+            `${elasticity} (${label})`, 
             `${(1/elasticityVal).toFixed(2)}`, 
             `${(Math.abs(chgQ)/q1 / (chgP/p1)).toFixed(2)}`, // Distractor: simple % change
             "1.00 (Unit Elastic)"
