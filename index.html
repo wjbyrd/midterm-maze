@@ -240,9 +240,18 @@ function getElasticityCalc() {
     // Elasticity = |(ΔQ / midQ) / (ΔP / midP)|
     const elasticityVal = Math.abs((chgQ / midQ) / (chgP / midP));
     const elasticity = elasticityVal.toFixed(2);
-    const isElastic = elasticityVal > 1 ? "Elastic" : "Inelastic";
 
-    return {
+
+    let label = "";
+    if (elasticityVal > 1) {
+        label = "Elastic";
+    } else if (elasticityVal < 1) {
+        label = "Inelastic";
+    } else {
+        label = "Unit Elastic";
+    }
+
+return {
         q: `When the price of a good increases from $${p1} to $${p2}, the quantity demanded decreases from ${q1} units to ${q2} units. Using the Midpoint (Arc) Method, what is the price elasticity of demand?`,
         options: [
             `${elasticity} (${isElastic})`, 
@@ -274,7 +283,6 @@ function getConsumerSurplusCalc() {
             `$${wtp - initialPrice}`
         ],
         a: 0,
-        hint: "Consumer surplus increase is the old price minus the new price for a single unit."
     };
 }
 
