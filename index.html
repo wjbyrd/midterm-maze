@@ -355,6 +355,7 @@ if (streak === 5 || streak === 10 || streak === 20) {
 
         // Victory Logic
         if (room > 30) {
+            bgMusic.pause();
             document.getElementById("mazeTrack").classList.add("victory");
             sfxVictory.play();
             const totalTimeMs = Date.now() - startTime;
