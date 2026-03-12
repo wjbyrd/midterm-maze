@@ -350,18 +350,22 @@ function answer(choice) {
                         <td>${formatTime(s.time)}</td>
                     </tr>`).join("");
 
-                document.getElementById("gameBox").innerHTML = `
-                    <h2 class="victory">CONQUERED!</h2>
-                    <div style="background:#1f2937;padding:20px;border-radius:10px;margin-top:20px;">
-                        <p>Well done, <strong>${username}</strong>! Your time: ${timeString}</p>
-                        <hr style="border:0; border-top:1px solid #374151; margin:15px 0;">
-                        <h3 style="margin-top:0;">🏆 Local Hall of Fame</h3>
-                        <table style="width:100%; text-align:left; border-collapse:collapse;">
-                            ${scoreRows}
-                        </table>
-                        <p style="margin-top:20px;">Verification Code: <span style='color:#fbbf24;font-size:20px;'>MAZE-${rand(1000, 9999)}</span></p>
-                        <button onclick="location.reload()">Try Again</button>
-                    </div>`;
+document.getElementById("gameBox").innerHTML = `
+    <h2 class="victory">CONQUERED!</h2>
+    <div style="background:#1f2937;padding:20px;border-radius:10px;margin-top:20px;">
+        <p>Well done, <strong>${username}</strong>! Your time: ${timeString}</p>
+        <hr style="border:0; border-top:1px solid #374151; margin:15px 0;">
+        <h3 style="margin-top:0;">🏆 Local Hall of Fame</h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse;">
+            ${scoreRows}
+        </table>
+        <p style="margin-top:20px;">Verification Code: <span style='color:#fbbf24;font-size:20px;'>MAZE-${rand(1000, 9999)}</span></p>
+        
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+            <button id="shareBtn" onclick="copyResults()">📋 Copy Results for Canvas</button>
+            <button onclick="location.reload()">Try Again</button>
+        </div>
+    </div>`;
                 localStorage.removeItem("gauntletRoom");
             }, 1000);
             return;
@@ -402,6 +406,25 @@ function formatTime(ms) {
     let mins = Math.floor(ms / 60000);
     let secs = Math.floor((ms / 1000) % 60);
     return `${mins}m ${secs}s`;
+}
+
+    function copyResults() {
+    const totalTimeMs = Date.now() - startTime;
+    const timeString = formatTime(totalTimeMs);
+    const code = document.querySelector('.victory + div span').innerText;
+    
+    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🔑 Verification Code: ${code}`;
+    
+    navigator.clipboard.writeText(shareText).then(() => {
+        const btn = document.getElementById("shareBtn");
+        const originalText = btn.innerText;
+        btn.innerText = "✅ Copied to Clipboard!";
+        btn.style.background = "#059669";
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "#374151";
+        }, 2000);
+    });
 }
 loadQuestion();
 </script>
