@@ -77,7 +77,10 @@ bgMusic.loop = true;
 bgMusic.volume = 0.1; // Adjusted slightly for a nice background level
 const sfxMilestone = new Audio('387232__steaq__badge-coin-win.wav');
 const sfxVictory = new Audio('220184__gameaudio__win-spacey.wav'); // New Victory Sound
-    
+
+let totalAttempts = 0;
+let correctAnswers = 0; 
+let maxStreak = 0; 
 let username = localStorage.getItem("gauntletUser");
 
 if (!username) {
@@ -292,7 +295,14 @@ function loadQuestion(){
     
     document.getElementById("roomDisplay").innerText = "Room " + room + " of 30";
     document.getElementById("formulaHint").innerText = q.hint ? "💡 Hint: " + q.hint : "";
-
+    
+    if (room === 9 || room === 19 || room === 29) {
+        document.getElementById("bossMessage").innerText = "⚠️ DANGER: BOSS DETECTED IN NEXT ROOM ⚠️";
+        document.getElementById("bossMessage").style.color = "#ef4444";
+    } else if (!getAreaName(room).includes("Boss")) {
+        document.getElementById("bossMessage").innerText = "";
+    }
+    
     if(diff.includes("Boss")){
         let bTitle = room==10?"WARDEN OF INDIFFERENCE":room==20?"THE DECOMPOSER OF CHOICE":"SOVEREIGN OF ELASTICITY";
         let bColor = room==10?"#fbbf24":room==20?"#a855f7":"#ef4444";
@@ -310,10 +320,12 @@ function loadQuestion(){
 }
 
 function answer(choice) {
- if (bgMusic.paused) {
+    totalAttempts++;
+    if (bgMusic.paused) {
         bgMusic.play();
     } 
     if (choice === currentQuestion.a) {
+        correctAnswers++;
         room++;
         streak++; // Increment streak
         if (streak > maxStreak) maxStreak = streak;
@@ -362,7 +374,9 @@ if (streak === 5 || streak === 10 || streak === 20) {
             const totalTimeMs = Date.now() - startTime;
             const timeString = formatTime(totalTimeMs);
             const topScores = updateHighScores(totalTimeMs);
-
+            const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
+            const isPerfect = accuracy === 100 && room > 30;
+            
             setTimeout(() => {
                 sfxVictory.play();
                 let scoreRows = topScores.map((s, i) => 
@@ -372,12 +386,17 @@ if (streak === 5 || streak === 10 || streak === 20) {
                     </tr>`).join("");
 
 document.getElementById("gameBox").innerHTML = `
-    <h2 class="victory">CONQUERED!</h2>
-    <div style="background:#1f2937;padding:20px;border-radius:10px;margin-top:20px;">
+    <h2 class="victory">${isPerfect ? "👑 FLAWLESS CONQUEST! 👑" : "CONQUERED!"}</h2>
+    <div style="background:#1f2937; padding:20px; border-radius:10px; margin-top:20px; ${isPerfect ? 'border: 3px solid gold;' : ''}">
         <p>Well done, <strong>${username}</strong>!</p>
-        <p>⏱️ Time: ${timeString} | 🔥 Best Streak: ${maxStreak}</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; font-size: 14px;">
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:5px;">⏱️ Time: ${timeString}</div>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:5px;">🔥 Best Streak: ${maxStreak}</div>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:5px;">🎯 Accuracy: ${accuracy}%</div>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:5px;">📝 Total Questions: ${totalAttempts}</div>
+        </div>
+        ${isPerfect ? "<p style='color:gold; font-weight:bold;'>✨ LEGENDARY STATUS ACHIEVED: PERFECT RUN ✨</p>" : ""}
         <hr style="border:0; border-top:1px solid #374151; margin:15px 0;">
-        <h3 style="margin-top:0;">🏆 Local Hall of Fame</h3>
         <table style="width:100%; text-align:left; border-collapse:collapse;">
             ${scoreRows}
         </table>
@@ -435,7 +454,7 @@ function formatTime(ms) {
     const timeString = formatTime(totalTimeMs);
     const code = document.querySelector('.victory + div span').innerText;
     
-    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🔥 Best Streak: ${maxStreak}\n🔑 Verification Code: ${code}`;
+    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🎯 Accuracy: ${accuracy}%\n🔥 Best Streak: ${maxStreak}\n📝 Total Questions: ${totalAttempts}\n🔑 Verification Code: ${code}`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         const btn = document.getElementById("shareBtn");
