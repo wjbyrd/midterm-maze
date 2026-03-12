@@ -435,7 +435,7 @@ function formatTime(ms) {
     const timeString = formatTime(totalTimeMs);
     const code = document.querySelector('.victory + div span').innerText;
     
-    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🔑 Verification Code: ${code}`;
+    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🔥 Best Streak: ${maxStreak}\n🔑 Verification Code: ${code}`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         const btn = document.getElementById("shareBtn");
