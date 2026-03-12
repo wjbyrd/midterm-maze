@@ -73,6 +73,8 @@ h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); 
 
 <script>
 const sfxMilestone = new Audio('841172__mlaudio__magic_ding.wav');
+const sfxVictory = new Audio('835880__matustrm__completed.wav'); // New Victory Sound
+    
 let username = localStorage.getItem("gauntletUser");
 
 if (!username) {
@@ -346,6 +348,7 @@ if (streak === 5 || streak === 10 || streak === 20) {
         // Victory Logic
         if (room > 30) {
             document.getElementById("mazeTrack").classList.add("victory");
+            sfxVictory.play();
             const totalTimeMs = Date.now() - startTime;
             const timeString = formatTime(totalTimeMs);
             const topScores = updateHighScores(totalTimeMs);
