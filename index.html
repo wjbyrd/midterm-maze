@@ -92,7 +92,6 @@ bgMusic.play().catch(e => console.log("Music waiting for first interaction"));
     
 let streak = 0; // Add this with your other variables
 let startTime = Date.now();
-let maxStreak = 0; // Tracks the highest streak achieved in the session [cite: 18, 22]
 let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
 let currentQuestion;
 
@@ -386,7 +385,7 @@ if (streak === 5 || streak === 10 || streak === 20) {
             const totalTimeMs = Date.now() - startTime;
             const timeString = formatTime(totalTimeMs);
             const topScores = updateHighScores(totalTimeMs);
-            window.currentAccuracy = Math.round((correctAnswers / totalAttempts) * 100);
+            const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
             const isPerfect = accuracy === 100 && room > 30;
             
             setTimeout(() => {
