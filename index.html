@@ -74,7 +74,7 @@ h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); 
 <script>
 const bgMusic = new Audio('545057__szegvari__monk-chant-fantasy.wav'); 
 bgMusic.loop = true; 
-bgMusic.volume = 0.15; // Adjusted slightly for a nice background level
+bgMusic.volume = 0.1; // Adjusted slightly for a nice background level
 const sfxMilestone = new Audio('387232__steaq__badge-coin-win.wav');
 const sfxVictory = new Audio('220184__gameaudio__win-spacey.wav'); // New Victory Sound
     
@@ -89,6 +89,7 @@ bgMusic.play().catch(e => console.log("Music waiting for first interaction"));
     
 let streak = 0; // Add this with your other variables
 let startTime = Date.now();
+let maxStreak = 0; // Tracks the highest streak achieved in the session [cite: 18, 22]
 let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
 let currentQuestion;
 
@@ -315,6 +316,7 @@ function answer(choice) {
     if (choice === currentQuestion.a) {
         room++;
         streak++; // Increment streak
+        if (streak > maxStreak) maxStreak = streak;
         
         // Handle Streak Announcements
         let streakMsg = "";
@@ -372,7 +374,8 @@ if (streak === 5 || streak === 10 || streak === 20) {
 document.getElementById("gameBox").innerHTML = `
     <h2 class="victory">CONQUERED!</h2>
     <div style="background:#1f2937;padding:20px;border-radius:10px;margin-top:20px;">
-        <p>Well done, <strong>${username}</strong>! Your time: ${timeString}</p>
+        <p>Well done, <strong>${username}</strong>!</p>
+        <p>⏱️ Time: ${timeString} | 🔥 Best Streak: ${maxStreak}</p>
         <hr style="border:0; border-top:1px solid #374151; margin:15px 0;">
         <h3 style="margin-top:0;">🏆 Local Hall of Fame</h3>
         <table style="width:100%; text-align:left; border-collapse:collapse;">
