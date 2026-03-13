@@ -714,6 +714,45 @@ function showKnowledgeRoom(bossRoom) {
         </button>`;
 }
 
+function handleVictory() {
+    // 1. Stop the music
+    if (bgMusic) bgMusic.pause();
+    
+    // 2. Play victory sound
+    if (sfxVictory) sfxVictory.play();
+    
+    // 3. Calculate Stats
+    const totalTimeMs = Date.now() - startTime;
+    const timeString = formatTime(totalTimeMs);
+    const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
+    const isPerfect = accuracy === 100;
+
+    // 4. Wipe the gameBox and show the Scroll of Mastery
+    const gameBox = document.getElementById("gameBox");
+    gameBox.innerHTML = `
+        <div style="text-align:center; padding:30px; animation: fadeIn 2s;">
+            <h1 style="color:gold; text-shadow: 0 0 20px gold; font-size:45px;">
+                👑 ${isPerfect ? "FLAWLESS CONQUEST" : "ARCHIVE CONQUERED"} 👑
+            </h1>
+            <p style="font-size:22px; color:#c4cad3; margin-bottom:20px;">
+                Master <strong>${username}</strong>, your journey is complete.
+            </p>
+            <div style="background: rgba(255,255,255,0.05); padding:20px; border-radius:12px; border: 1px solid #374151; display:inline-block; min-width:300px;">
+                <p style="margin:10px 0;">Final Accuracy: <span style="color:#4ade80; font-weight:bold;">${accuracy}%</span></p>
+                <p style="margin:10px 0;">Greatest Streak: <span style="color:#60a5fa; font-weight:bold;">${maxStreak}</span></p>
+                <p style="margin:10px 0;">Time of Ascent: <span style="color:#fbbf24; font-weight:bold;">${timeString}</span></p>
+            </div>
+            <br><br>
+            <button onclick="location.reload()" 
+                    style="background:gold; color:black; font-weight:bold; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; font-size:18px;">
+                RE-ENTER THE LABYRINTH
+            </button>
+        </div>
+    `;
+    
+    // Remove the room save so they can start fresh next time
+    localStorage.removeItem("gauntletRoom");
+}  
   
 function shuffleArray(arr){
     for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
