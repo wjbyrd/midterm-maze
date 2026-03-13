@@ -567,6 +567,21 @@ function updateMazeTrack() {
     }
 }
 
+function shuffle(arr){
+    for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function pickRandom(pool){
+    if(!pool._remaining || pool._remaining.length === 0){
+        pool._remaining = shuffle([...pool]);
+    }
+    return pool._remaining.pop();
+}
+    
 function loadQuestion() {
     updateMazeTrack();
     const questionElement = document.getElementById("question");
@@ -587,7 +602,7 @@ function loadQuestion() {
     if (isBoss) {
         if (bossHealth === 3) {
             const pool = questionBanks[diff];
-            bossPool = [...pool].sort(() => Math.random() - 0.5);
+            bossPool = shuffle([...pool]);
         }
         currentQuestion = bossPool[3 - bossHealth];
         
@@ -607,8 +622,8 @@ if(diff === "calculation"){
 }
 else{
     const pool = questionBanks[diff];
-    currentQuestion = shuffleOptions(
-        pool[Math.floor(Math.random() * pool.length)]
+currentQuestion = shuffleOptions(
+    pickRandom(pool)
     );
 }
         bossMsg.innerText = (room === 9 || room === 19 || room === 29) ? "⚠️ DANGER: BOSS DETECTED IN NEXT ROOM ⚠️" : "";
