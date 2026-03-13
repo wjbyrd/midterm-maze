@@ -306,7 +306,7 @@ const questionBanks = {
     finalBoss:[
         {q:"A firm observes that when it lowers price, total revenue rises. What must be true about demand at the original price?",options:["Demand was elastic","Demand was inelastic","Demand was perfectly inelastic","Demand was unit elastic"],a:0},
         {q:"The price of a product rises from $10 to $12 and quantity demanded falls from 100 to 80. Using the midpoint method, what happens to total revenue?",options:["Total revenue decreases","Total revenue increases","Total revenue stays the same","Total revenue becomes zero"],a:0,feedback:"Elasticity ≈ 1.22 (elastic). When demand is elastic, price increases reduce total revenue."},
-        {q:"A consumer faces Px = $4 and Py = $2. If MUx = 32, what must MUy equal for the consumer to be in equilibrium?",options:["16","8","32","4"],a:0,feedback:"Equilibrium requires MUx/Px = MUy/Py. 32/4 = 8, so MUy/2 = 8 → MUy = 16."}              
+        {q:"A consumer faces Px = $4 and Py = $2. If MUx = 32, what must MUy equal for the consumer to be in equilibrium?",options:["4","8","16","32"],a:2,feedback:"Equilibrium requires MUx/Px = MUy/Py. 32/4 = 8, so MUy/2 = 8 → MUy = 16."}              
     ],
     easy: [
 {q:"A theory of choice assumes individuals...",options:["Make random decisions","Choose the most preferred affordable bundle","Always maximize income","Always minimize work"],a:1,tag:"preferences",feedback:"Consumers choose the most preferred bundle they can afford given their budget constraint."},
@@ -341,56 +341,52 @@ const questionBanks = {
 {q:"If two goods are substitutes, an increase in the price of one good will...",options:["Increase demand for the other good","Decrease demand for the other good","Not affect demand","Eliminate demand"],a:0,tag:"demand",feedback:"When one substitute becomes expensive, consumers switch to the other."},
 {q:"If two goods are complements, an increase in the price of one good will...",options:["Decrease demand for the other good","Increase demand for the other good","Have no effect","Make demand perfectly elastic"],a:0,tag:"demand",feedback:"Complements are used together, so higher price reduces demand for both."}
 ],
-    medium: [
-        {q:"An individual demand curve is derived from...",options:["Budget constraints only","Optimal consumption bundles at different prices","Utility levels only","Production functions"],a:1,feedback:"A demand curve traces the optimal bundle chosen at different prices."},
-{q:"When price falls, the optimal bundle typically moves...",options:["Along the demand curve","Off the demand curve","To a different market","Randomly"],a:0,feedback:"Price changes move consumers along the demand curve."},
-{q:"A price change affects consumption through...",options:["Income and substitution effects","Supply effects","Production effects","Random effects"],a:0,feedback:"Price changes affect choices through substitution and income effects."},
-{q:"The substitution effect occurs because...",options:["Relative prices change","Income changes","Preferences change","Demand shifts"],a:0,feedback:"The substitution effect occurs because relative prices change."},
-{q:"If a good is normal, an income increase causes demand to...",options:["Increase","Decrease","Stay constant","Disappear"],a:0,feedback:"Normal goods are purchased more as income rises."},
-{q:"If a good is inferior, an income increase causes demand to...",options:["Increase","Decrease","Stay constant","Become vertical"],a:1,feedback:"Inferior goods are purchased less as income rises."},
-{q:"Demand shifts outward when...",options:["Income rises for a normal good","Price increases","Technology improves","Costs rise"],a:0,feedback:"Higher income increases demand for normal goods."},
-{q:"A demand curve shifts when...",options:["Income or preferences change","Price changes","Supply changes","Markets disappear"],a:0,feedback:"Changes in income or preferences shift demand."},
-{q:"The substitution effect of a price decrease always...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Depends on income"],a:0,feedback:"Lower prices make the good relatively more attractive."},
-{q:"The income effect of a price decrease for a normal good...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Reduces welfare"],a:0,feedback:"Lower prices increase purchasing power."},
-{q:"For an inferior good, the income effect of a price decrease...",options:["Reduces quantity demanded","Increases quantity demanded","Is always zero","Creates surplus"],a:0,feedback:"Higher purchasing power reduces demand for inferior goods."},
-{q:"A Giffen good occurs when...",options:["Income effect outweighs substitution effect","Substitution effect dominates","Demand becomes perfectly elastic","Income rises"],a:0,feedback:"Giffen goods occur when the income effect dominates the substitution effect."},
-{q:"If income rises and demand increases, the good is...",options:["Normal","Inferior","Elastic","Substitute"],a:0,feedback:"Normal goods see higher demand as income rises."},
-{q:"If the price of coffee rises and demand for tea increases, the goods are...",options:["Substitutes","Complements","Inferior","Normal"],a:0,feedback:"Substitutes replace each other when prices change."},
-{q:"If the price of printers rises and demand for ink falls, the goods are...",options:["Complements","Substitutes","Inferior","Giffen"],a:0,feedback:"Complements are used together, so demand moves together."},
-{q:"The marginal rate of substitution equals...",options:["Slope of the indifference curve","Slope of the budget line","Income divided by price","Demand elasticity"],a:0,feedback:"The MRS equals the slope of the indifference curve."},
-{q:"Consumer equilibrium occurs when...",options:["MRS equals price ratio","Utility is zero","Income is maximized","Demand equals supply"],a:0,feedback:"Consumers maximize utility where MRS equals the price ratio."},
-{q:"A normal good is one where...",options:["Demand rises as income rises","Demand falls as income rises","Price always rises","Utility is constant"],a:0,feedback:"Normal goods are purchased more as income rises."},
-{q:"An inferior good is one where...",options:["Demand falls as income rises","Price falls with income","Utility decreases","Consumers avoid it"],a:0,feedback:"Inferior goods are purchased less as income rises."},
-{q:"A steeper budget line means...",options:["One good has become relatively more expensive","Income increased","Utility increased","Demand increased"],a:0,feedback:"The slope reflects the price ratio between goods."},
-{q:"A steeper indifference curve indicates...",options:["Higher willingness to trade Y for X","Lower utility","Higher income","Lower demand"],a:0,feedback:"A steeper curve means the consumer values X more relative to Y."},
-{q:"If the marginal rate of substitution exceeds the price ratio...",options:["The consumer should consume more of good X","The consumer should consume less of good X","Utility falls","Income changes"],a:0,feedback:"If MRS is higher than the price ratio, X provides more utility per dollar."},
-{q:"Utility maximization occurs where...",options:["MRS equals the price ratio","Demand equals supply","Income equals spending","Marginal utility is zero"],a:0,feedback:"Utility is maximized where MRS equals the price ratio."},
-{q:"If elasticity is greater than 1, demand is...",options:["Elastic","Inelastic","Unitary","Vertical"],a:0,feedback:"Elastic demand means quantity responds strongly to price changes."},
-{q:"If demand is perfectly inelastic...",options:["Quantity demanded does not change with price","Price does not change","Income is constant","Demand disappears"],a:0,feedback:"Perfectly inelastic demand means quantity never changes."},
-{q:"Elastic demand implies...",options:["Large quantity response to price change","Small quantity response","No quantity response","Infinite supply"],a:0,feedback:"Elastic demand means buyers respond strongly to price changes."},
-{q:"Price elasticity of demand equals...",options:["Percent change in quantity divided by percent change in price","Price divided by quantity","Demand divided by supply","Income divided by price"],a:0,feedback:"Elasticity measures responsiveness to price changes."},
-{q:"If elasticity equals 1, demand is...",options:["Unit elastic","Perfectly elastic","Inelastic","Vertical"],a:0,feedback:"Unit elasticity means percentage changes are equal."},
-{q:"The income effect occurs because...",options:["A price change alters purchasing power","Prices change utility","Consumers prefer cheaper goods","Demand shifts randomly"],a:0,feedback:"Price changes affect purchasing power."},
-{q:"A perfectly elastic demand curve implies...",options:["Consumers will only buy at one price","Quantity never changes","Demand is fixed","Consumers buy regardless of price"],a:0,feedback:"Even a tiny price increase eliminates demand."},
-{q:"If the price of X falls, the substitution effect...",options:["Moves consumption toward X","Moves consumption toward Y","Has no effect","Reduces income"],a:0,feedback:"Consumers substitute toward relatively cheaper goods."}
-],
-hard: [   
-{q:"A price increase reduces consumer surplus because...",options:["Consumers pay more and buy less","Income increases","Costs rise","Supply falls"],a:0,feedback:"Higher prices reduce the gap between willingness to pay and price."},
-{q:"Market demand becomes flatter when...",options:["More consumers enter the market","Costs rise","Firms exit","Supply shifts"],a:0,feedback:"More buyers make total demand more responsive to price."},
-{q:"When demand is elastic, a price decrease will...",options:["Increase total revenue","Decrease total revenue","Leave revenue unchanged","Eliminate demand"],a:0,feedback:"With elastic demand, quantity rises more than price falls."},
-{q:"When demand is inelastic, a price increase will...",options:["Increase total revenue","Decrease total revenue","Leave revenue unchanged","Reduce profit"],a:0,feedback:"With inelastic demand, price rises more than quantity falls."},
-{q:"A price decrease increases consumer surplus because...",options:["More consumers buy and existing consumers pay less","Income rises","Supply increases","Costs fall"],a:0,feedback:"Lower prices increase surplus for all buyers."},
-{q:"For a Giffen good...",options:["Income effect outweighs substitution effect","Demand always rises","Substitution effect dominates","Price has no effect"],a:0,feedback:"Giffen goods occur when the income effect dominates."},
-{q:"If demand is elastic, a price increase will cause total revenue to...",options:["Decrease","Increase","Stay the same","Become zero"],a:0,feedback:"Elastic demand means quantity falls sharply when price rises."},
-{q:"If demand is inelastic, a price decrease will cause total revenue to...",options:["Decrease","Increase","Stay the same","Become infinite"],a:0,feedback:"With inelastic demand, lower prices reduce revenue."},
-{q:"If demand becomes more elastic, a firm raising price is more likely to...",options:["Lose revenue","Gain revenue","Keep revenue constant","Eliminate demand"],a:0,feedback:"Elastic demand means buyers are very responsive to price."},
-{q:"A good with many close substitutes will tend to have demand that is...",options:["More elastic","More inelastic","Perfectly inelastic","Vertical"],a:0,feedback:"Substitutes make consumers more price sensitive."},
-{q:"A necessity with few substitutes tends to have demand that is...",options:["Inelastic","Elastic","Perfectly elastic","Horizontal"],a:0,feedback:"Necessities have few substitutes so demand is less responsive."},
-{q:"If the demand curve shifts outward while price remains constant, consumer surplus will...",options:["Increase","Decrease","Remain unchanged","Become zero"],a:0,feedback:"Higher willingness to pay increases consumer surplus."},
-{q:"If the demand curve becomes steeper, demand has become...",options:["More inelastic","More elastic","Unit elastic","Perfectly elastic"],a:0,feedback:"A steeper curve means quantity responds less to price."},
-{q:"If price rises and total revenue rises, demand must be...",options:["Inelastic","Elastic","Unit elastic","Perfectly elastic"],a:0,feedback:"Revenue rises with price only when demand is inelastic."},
-{q:"If price falls and total revenue rises, demand must be...",options:["Elastic","Inelastic","Perfectly inelastic","Vertical"],a:0,feedback:"Revenue rises when quantity increases more than price falls."},
-{q:"If a good takes a large share of income, its demand tends to be...",options:["More elastic","More inelastic","Perfectly inelastic","Vertical"],a:0,feedback:"Expensive goods make consumers more price sensitive."}
+medium: [
+{q:"An individual demand curve is derived from...",options:["Budget constraints only","Optimal consumption bundles at different prices","Utility levels only","Production functions"],a:1,tag:"demand",feedback:"A demand curve traces the optimal bundle chosen at different prices."},
+{q:"When price falls, the optimal bundle typically moves...",options:["Along the demand curve","Off the demand curve","To a different market","Randomly"],a:0,tag:"demand",feedback:"Price changes move consumers along the demand curve."},
+{q:"A price change affects consumption through...",options:["Income and substitution effects","Supply effects","Production effects","Random effects"],a:0,tag:"income_substitution",feedback:"Price changes affect choices through substitution and income effects."},
+{q:"The substitution effect occurs because...",options:["Relative prices change","Income changes","Preferences change","Demand shifts"],a:0,tag:"income_substitution",feedback:"The substitution effect occurs because relative prices change."},
+{q:"If a good is normal, an income increase causes demand to...",options:["Increase","Decrease","Stay constant","Disappear"],a:0,tag:"normal_inferior",feedback:"Normal goods are purchased more as income rises."},
+{q:"If a good is inferior, an income increase causes demand to...",options:["Increase","Decrease","Stay constant","Become vertical"],a:1,tag:"normal_inferior",feedback:"Inferior goods are purchased less as income rises."},
+{q:"Demand shifts outward when...",options:["Income rises for a normal good","Price increases","Technology improves","Costs rise"],a:0,tag:"demand",feedback:"Higher income increases demand for normal goods."},
+{q:"A demand curve shifts when...",options:["Income or preferences change","Price changes","Supply changes","Markets disappear"],a:0,tag:"demand",feedback:"Changes in income or preferences shift demand."},
+{q:"The substitution effect of a price decrease always...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Depends on income"],a:0,tag:"income_substitution",feedback:"Lower prices make the good relatively more attractive."},
+{q:"The income effect of a price decrease for a normal good...",options:["Increases quantity demanded","Decreases quantity demanded","Has no effect","Reduces welfare"],a:0,tag:"income_substitution",feedback:"Lower prices increase purchasing power."},
+{q:"For an inferior good, the income effect of a price decrease...",options:["Reduces quantity demanded","Increases quantity demanded","Is always zero","Creates surplus"],a:0,tag:"normal_inferior",feedback:"Higher purchasing power reduces demand for inferior goods."},
+{q:"A Giffen good occurs when...",options:["Income effect outweighs substitution effect","Substitution effect dominates","Demand becomes perfectly elastic","Income rises"],a:0,tag:"income_substitution",feedback:"Giffen goods occur when the income effect dominates the substitution effect."},
+{q:"If income rises and demand increases, the good is...",options:["Normal","Inferior","Elastic","Substitute"],a:0,tag:"normal_inferior",feedback:"Normal goods see higher demand as income rises."},
+{q:"If the price of coffee rises and demand for tea increases, the goods are...",options:["Substitutes","Complements","Inferior","Normal"],a:0,tag:"demand",feedback:"Substitutes replace each other when prices change."},
+{q:"If the price of printers rises and demand for ink falls, the goods are...",options:["Complements","Substitutes","Inferior","Giffen"],a:0,tag:"demand",feedback:"Complements are used together, so demand moves together."},
+{q:"The marginal rate of substitution equals...",options:["Slope of the indifference curve","Slope of the budget line","Income divided by price","Demand elasticity"],a:0,tag:"consumer_equilibrium",feedback:"The MRS equals the slope of the indifference curve."},
+{q:"Consumer equilibrium occurs when...",options:["MRS equals price ratio","Utility is zero","Income is maximized","Demand equals supply"],a:0,tag:"consumer_equilibrium",feedback:"Consumers maximize utility where MRS equals the price ratio."},
+{q:"A normal good is one where...",options:["Demand rises as income rises","Demand falls as income rises","Price always rises","Utility is constant"],a:0,tag:"normal_inferior",feedback:"Normal goods are purchased more as income rises."},
+{q:"An inferior good is one where...",options:["Demand falls as income rises","Price falls with income","Utility decreases","Consumers avoid it"],a:0,tag:"normal_inferior",feedback:"Inferior goods are purchased less as income rises."},
+{q:"A steeper budget line means...",options:["One good has become relatively more expensive","Income increased","Utility increased","Demand increased"],a:0,tag:"consumer_equilibrium",feedback:"The slope reflects the price ratio between goods."},
+{q:"A steeper indifference curve indicates...",options:["Higher willingness to trade Y for X","Lower utility","Higher income","Lower demand"],a:0,tag:"consumer_equilibrium",feedback:"A steeper curve means the consumer values X more relative to Y."},
+{q:"If the marginal rate of substitution exceeds the price ratio...",options:["The consumer should consume more of good X","The consumer should consume less of good X","Utility falls","Income changes"],a:0,tag:"consumer_equilibrium",feedback:"If MRS is higher than the price ratio, X provides more utility per dollar."},
+{q:"Utility maximization occurs where...",options:["MRS equals the price ratio","Demand equals supply","Income equals spending","Marginal utility is zero"],a:0,tag:"consumer_equilibrium",feedback:"Utility is maximized where MRS equals the price ratio."},
+{q:"If elasticity is greater than 1, demand is...",options:["Elastic","Inelastic","Unitary","Vertical"],a:0,tag:"elasticity",feedback:"Elastic demand means quantity responds strongly to price changes."},
+{q:"If demand is perfectly inelastic...",options:["Quantity demanded does not change with price","Price does not change","Income is constant","Demand disappears"],a:0,tag:"elasticity",feedback:"Perfectly inelastic demand means quantity never changes."},
+{q:"Elastic demand implies...",options:["Large quantity response to price change","Small quantity response","No quantity response","Infinite supply"],a:0,tag:"elasticity",feedback:"Elastic demand means buyers respond strongly to price changes."},
+{q:"Price elasticity of demand equals...",options:["Percent change in quantity divided by percent change in price","Price divided by quantity","Demand divided by supply","Income divided by price"],a:0,tag:"elasticity",feedback:"Elasticity measures responsiveness to price changes."},
+{q:"If elasticity equals 1, demand is...",options:["Unit elastic","Perfectly elastic","Inelastic","Vertical"],a:0,tag:"elasticity",feedback:"Unit elasticity means percentage changes are equal."},
+{q:"The income effect occurs because...",options:["A price change alters purchasing power","Prices change utility","Consumers prefer cheaper goods","Demand shifts randomly"],a:0,tag:"income_substitution",feedback:"Price changes affect purchasing power."},
+{q:"A perfectly elastic demand curve implies...",options:["Consumers will only buy at one price","Quantity never changes","Demand is fixed","Consumers buy regardless of price"],a:0,tag:"elasticity",feedback:"Even a tiny price increase eliminates demand."},
+{q:"If the price of X falls, the substitution effect...",options:["Moves consumption toward X","Moves consumption toward Y","Has no effect","Reduces income"],a:0,tag:"income_substitution",feedback:"Consumers substitute toward relatively cheaper goods."}
+], 
+hard:[
+{q:"If demand for a good is elastic and the firm lowers price, what will happen to total revenue and consumer surplus?",options:["Both total revenue and consumer surplus increase","Revenue increases but surplus decreases","Revenue decreases but surplus increases","Both decrease"],a:0,feedback:"With elastic demand, quantity rises more than price falls, raising revenue. Lower prices also increase consumer surplus."},
+{q:"If demand is inelastic and a firm raises its price, what happens to total revenue?",options:["Total revenue increases","Total revenue decreases","Total revenue stays the same","Revenue becomes zero"],a:0,feedback:"With inelastic demand, quantity falls only slightly when price rises, so revenue increases."},
+{q:"A new close substitute enters the market for a product. What happens to the elasticity of demand for the original product?",options:["Demand becomes more elastic","Demand becomes more inelastic","Demand becomes perfectly inelastic","Demand disappears"],a:0,feedback:"More substitutes make consumers more responsive to price changes."},
+{q:"If the demand curve shifts outward while price stays the same, what happens to consumer surplus?",options:["Consumer surplus increases","Consumer surplus decreases","Consumer surplus remains unchanged","Consumer surplus becomes zero"],a:0,feedback:"Higher willingness to pay increases the difference between value and price."},
+{q:"If demand is elastic and a firm raises price, what happens to total revenue?",options:["Total revenue falls","Total revenue rises","Total revenue stays the same","Revenue becomes infinite"],a:0,feedback:"Elastic demand means quantity falls more than price rises."},
+{q:"A good takes a large share of consumer income and has many substitutes. Its demand is most likely...",options:["Highly elastic","Highly inelastic","Perfectly inelastic","Unit elastic"],a:0,feedback:"Large budget share and substitutes both increase price sensitivity."},
+{q:"If the price of a good falls and total revenue rises, what must be true about demand?",options:["Demand is elastic","Demand is inelastic","Demand is perfectly inelastic","Demand is vertical"],a:0,feedback:"Revenue rises when quantity increases more than price falls."},
+{q:"If a firm faces very inelastic demand and raises its price, what happens to consumer surplus?",options:["Consumer surplus falls","Consumer surplus rises","Consumer surplus stays the same","Consumer surplus becomes infinite"],a:0,feedback:"Higher prices reduce the difference between willingness to pay and price."},
+{q:"If a demand curve becomes flatter, what has happened to price elasticity?",options:["Demand has become more elastic","Demand has become more inelastic","Demand has become perfectly inelastic","Demand has become vertical"],a:0,feedback:"Flatter demand curves mean quantity responds more strongly to price changes."},
+{q:"If income rises and demand for a good rises significantly, and the good has many substitutes, demand will likely be...",options:["Relatively elastic","Perfectly inelastic","Perfectly vertical","Independent of price"],a:0,feedback:"Normal goods with substitutes typically have elastic demand."},
+{q:"A firm lowers price and sees only a very small increase in quantity demanded. Demand for the good must be...",options:["Inelastic","Elastic","Perfectly elastic","Unit elastic"],a:0,feedback:"If quantity changes very little after a price change, demand is inelastic."},
+{q:"If demand becomes more elastic, what happens to the impact of a price increase on revenue?",options:["Revenue becomes more likely to fall","Revenue becomes more likely to rise","Revenue stays constant","Revenue becomes infinite"],a:0,feedback:"With elastic demand, quantity falls sharply when price rises, reducing revenue."}
 ]
 };
 
@@ -425,6 +421,34 @@ demand:[
 {q:"Price elasticity of demand measures...",options:["How responsive quantity demanded is to price changes","The total revenue earned by firms","The income of consumers","The slope of the supply curve"],a:0,feedback:"Elasticity measures how strongly consumers respond to price changes."}
 ]
     };
+
+const mediumConceptPools = {
+demand:[
+{q:"A movement along a demand curve occurs when...",options:["The price of the good changes","Income changes","Consumer tastes change","The number of buyers changes"],a:0,feedback:"A change in the good’s own price causes movement along the demand curve."},
+{q:"A demand curve shifts when...",options:["Income or preferences change","The good’s own price changes","Firms change production","Technology changes"],a:0,feedback:"Demand shifts occur when factors other than the good’s own price change."},
+{q:"If the price of coffee rises and demand for tea increases, coffee and tea are...",options:["Substitutes","Complements","Inferior goods","Unrelated goods"],a:0,feedback:"Substitutes are goods consumers switch between when relative prices change."}],
+
+income_substitution:[
+{q:"The substitution effect occurs because...",options:["Relative prices change","Income changes","Preferences change","Demand shifts randomly"],a:0,feedback:"The substitution effect occurs because one good becomes relatively cheaper or more expensive."},
+{q:"The income effect occurs because...",options:["A price change changes purchasing power","Consumers always buy less","Preferences suddenly change","Supply conditions shift"],a:0,feedback:"When price changes, the consumer’s real purchasing power changes too."},
+{q:"When the price of a good falls, the substitution effect causes consumers to...",options:["Buy more of the relatively cheaper good","Buy less of the good","Ignore the price change","Buy equal amounts of all goods"],a:0,feedback:"Consumers substitute toward the relatively cheaper good."}],
+
+normal_inferior:[
+{q:"A normal good is one where...",options:["Demand rises as income rises","Demand falls as income rises","Demand is unrelated to income","Price always rises with income"],a:0,feedback:"Normal goods are purchased more when income increases."},
+{q:"An inferior good is one where...",options:["Demand falls as income rises","Demand rises as income rises","Demand never changes","Price becomes lower as income rises"],a:0,feedback:"Inferior goods are purchased less when income increases."},
+{q:"If income rises and people buy more restaurant meals, restaurant meals are...",options:["Normal goods","Inferior goods","Giffen goods","Complements"],a:0,feedback:"If demand rises with income, the good is normal."}],
+
+consumer_equilibrium:[
+{q:"Consumer equilibrium occurs where...",options:["The highest attainable indifference curve is tangent to the budget line","Income equals spending on one good","Demand equals supply","Utility is zero"],a:0,feedback:"Consumers maximize utility at the point where the best affordable indifference curve touches the budget line."},
+{q:"At the optimal bundle, the marginal rate of substitution equals...",options:["The ratio of prices","Total income","The slope of the demand curve","Total utility"],a:0,feedback:"Consumer equilibrium occurs where MRS equals the price ratio."},
+{q:"If MUx/Px is greater than MUy/Py, the consumer should...",options:["Consume more X and less Y","Consume more Y and less X","Stop consuming both goods","Reduce income"],a:0,feedback:"The consumer should shift spending toward the good with higher marginal utility per dollar."}],
+
+elasticity:[
+{q:"Price elasticity of demand measures...",options:["How responsive quantity demanded is to price changes","How responsive supply is to price changes","How much income consumers earn","How much firms spend on production"],a:0,feedback:"Elasticity measures the responsiveness of quantity demanded to a change in price."},
+{q:"If elasticity is greater than 1, demand is...",options:["Elastic","Inelastic","Unit elastic","Perfectly inelastic"],a:0,feedback:"Elastic demand means quantity demanded responds strongly to price changes."},
+{q:"If elasticity is less than 1, demand is...",options:["Inelastic","Elastic","Unit elastic","Perfectly elastic"],a:0,feedback:"Inelastic demand means quantity demanded responds weakly to price changes."}]
+};
+    
 function shuffleOptions(question){
 
 let q = {
@@ -744,23 +768,37 @@ function answer(choice) {
     } else {
         streak = 0;
         // If question has a concept tag, trigger a reinforcement detour
-        if(!detourActive && currentQuestion.tag && easyConceptPools[currentQuestion.tag]?.length){
+// --- Adaptive Concept Detour ---
+if(!detourActive && currentQuestion.tag){
+
+    let conceptPool = null;
+
+    // Determine difficulty based on room
+    if(room <= 9 && easyConceptPools[currentQuestion.tag]){
+        conceptPool = easyConceptPools[currentQuestion.tag];
+    }
+
+    if(room >= 11 && room <= 19 && mediumConceptPools[currentQuestion.tag]){
+        conceptPool = mediumConceptPools[currentQuestion.tag];
+    }
+
+    if(conceptPool){
 
         detourActive = true;
         detourReturnRoom = room;
 
-        const pool = easyConceptPools[currentQuestion.tag];
-        currentQuestion = shuffleOptions(pickRandom(pool));
-            
+        currentQuestion = shuffleOptions(pickRandom(conceptPool));
+
         document.getElementById("question").innerText = "Concept Check: " + currentQuestion.q;
         document.getElementById("formulaHint").innerText = currentQuestion.hint ? "💡 Hint: " + currentQuestion.hint : "";
-        
+
         const msgElement = document.getElementById("message");
         msgElement.innerHTML = `<span class='fade-out-text'>You falter… The labyrinth demands a concept check.</span>`;
 
         displayQuestion();
         return;
-        }
+    }
+}
         document.getElementById("streakDisplay").innerText = "";
         bossHealth = 3; // Reset boss health on fail
         
