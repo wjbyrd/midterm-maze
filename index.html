@@ -535,66 +535,55 @@ function updateMazeTrack() {
     }
 }
 
-function loadQuestion(){
+function loadQuestion() {
     updateMazeTrack();
     const questionElement = document.getElementById("question");
-    const choicesElement = document.getElementById("choices");
     const msgElement = document.getElementById("message");
+    const gameBox = document.getElementById("gameBox");
 
-    if (room === 10 || room === 20 || room === 30) {
-        // Only refresh the boss pool if health is full (start of battle)
+    // 1. Determine Difficulty and Boss Status
+    let diff = (room <= 9) ? "easy" : (room == 10) ? "easyBoss" : (room <= 19) ? "medium" : (room == 20) ? "mediumBoss" : (room <= 29) ? "hard" : "finalBoss";
+    const isBoss = diff.includes("Boss");
+    
+    // 2. UI & Progress Updates
+    gameBox.classList.toggle("boss-mode", isBoss);
+    document.getElementById("progressFill").style.width = (room / 30 * 100) + "%";
+    document.getElementById("areaDisplay").innerText = `${getAreaName(room)} (${room}/30)`;
+
+    // 3. Select the Question (Boss Logic vs Normal Logic)
+    if (isBoss) {
+        // Prepare the pool only if health is full
         if (bossHealth === 3) {
-            const pool = room === 10 ? boss10Pool : (room === 20 ? boss20Pool : boss30Pool);
+            const pool = questionBanks[diff];
             bossPool = [...pool].sort(() => Math.random() - 0.5);
         }
-        // Current question is determined by how much health the boss has left
+        // Select question based on health remaining
         currentQuestion = bossPool[3 - bossHealth];
-        questionElement.innerHTML = `<span style='color:#f87171; font-weight:bold;'>BOSS LEVEL: </span>` + currentQuestion.q;
     } else {
-        // --- KEEP YOUR EXISTING POOL LOGIC BELOW ---
-        let pool = room <= 10 ? easy : (room <= 20 ? medium : hard);
+        // Normal room selection
+        const pool = questionBanks[diff];
         currentQuestion = pool[Math.floor(Math.random() * pool.length)];
-        questionElement.innerText = `Room ${room}: ` + currentQuestion.q;
     }
 
-    // 1. Determine difficulty and room count
-    let diff = (room<=9) ? "easy" : (room==10) ? "easyBoss" : (room<=19) ? "medium" : (room==20) ? "mediumBoss" : (room<=29) ? "hard" : "finalBoss";
-    
-    // 2. Trigger Boss Mode visual
-    const isBoss = diff.includes("Boss");
-    document.getElementById("gameBox").classList.toggle("boss-mode", isBoss);
-    
-    // 3. Update Header and Progress
-    document.getElementById("progressFill").style.width=(room/30*100)+"%";
-    document.getElementById("areaDisplay").innerText = `${getAreaName(room)} (${room}/30)`;
-    
-    let q = randomQuestion(diff);
-    currentQuestion = q;
-    
-    document.getElementById("formulaHint").innerText = q.hint ? "💡 Hint: " + q.hint : "";
-    
+    // 4. Handle Boss Messaging & Titles
     if (room === 9 || room === 19 || room === 29) {
         document.getElementById("bossMessage").innerText = "⚠️ DANGER: BOSS DETECTED IN NEXT ROOM ⚠️";
         document.getElementById("bossMessage").style.color = "#ef4444";
+    } else if (isBoss) {
+        let bTitle = room == 10 ? "WARDEN OF INDIFFERENCE" : room == 20 ? "THE DECOMPOSER OF CHOICE" : "SOVEREIGN OF ELASTICITY";
+        let bColor = room == 10 ? "#fbbf24" : room == 20 ? "#a855f7" : "#ef4444";
+        document.getElementById("bossMessage").innerText = "⚠ BOSS ENCOUNTER ⚠";
+        document.getElementById("bossMessage").style.color = bColor;
+        gameBox.style.setProperty('--bossColor', bColor);
+        questionElement.innerHTML = `<span class="boss-title" style="color:${bColor}">${bTitle}</span><div class="boss-q" style="--bossColor:${bColor}">${currentQuestion.q}</div>`;
     } else {
         document.getElementById("bossMessage").innerText = "";
+        questionElement.innerText = currentQuestion.q;
     }
-    
-    if(isBoss){
-        let bTitle = room==10?"WARDEN OF INDIFFERENCE":room==20?"THE DECOMPOSER OF CHOICE":"SOVEREIGN OF ELASTICITY";
-        let bColor = room==10?"#fbbf24":room==20?"#a855f7":"#ef4444";
-        document.getElementById("bossMessage").innerText = "⚠ BOSS ENCOUNTER ⚠";
-        document.getElementById("question").innerHTML = `<span class="boss-title" style="color:${bColor}">${bTitle}</span><div class="boss-q" style="--bossColor:${bColor}">${q.q}</div>`;
-        document.getElementById("gameBox").style.setProperty('--bossColor', bColor);
-    } else {
-        document.getElementById("question").innerText = q.q;
-    }
-    
-    let opts = q.options.map((opt,i)=>({text:opt,index:i}));
-    opts = shuffleArray(opts);
-    document.getElementById("answers").innerHTML = opts.map(o=>`<button onclick="answer(${o.index})">${o.text}</button>`).join("");
 
-    displayQuestion();
+    // 5. Render the Answers and Formula Hint
+    document.getElementById("formulaHint").innerText = currentQuestion.hint ? "💡 Hint: " + currentQuestion.hint : "";
+    displayQuestion(); // This handles the shuffling and button generation
 }
 
 function answer(choice) {
