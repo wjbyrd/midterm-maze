@@ -570,16 +570,18 @@ function answer(choice) {
         handleStreakVisuals();
 
         // 2. Check for Boss/Knowledge Rooms (10, 20, 30)
-        // We check the CURRENT room before incrementing it
         if (room === 10 || room === 20 || room === 30) {
             showKnowledgeRoom(room);
-            return; // Stop here so the knowledge room can display
+            return; 
         }
 
-        // 3. Normal Room Progression
+        // 3. Normal Room Progression with Dynamic Feedback
+        // This looks for your specific feedback in the question pool
+        const feedbackText = currentQuestion.feedback || "Correct! Moving deeper...";
+        msgElement.innerHTML = `<span class='fade-out-text'>${feedbackText}</span>`;
+
         room++;
         localStorage.setItem("gauntletRoom", room);
-        msgElement.innerHTML = "<span class='fade-out-text'>Correct! Moving deeper...</span>";
         loadQuestion();
 
     } else {
@@ -728,7 +730,7 @@ function copyResults() {
     const timeString = formatTime(totalTimeMs);
     const code = document.querySelector('.victory + div span').innerText;
     const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
-    const shareText = `🎮 Microeconomics Gauntlet Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🎯 Accuracy: ${accuracy}%\n🔥 Best Streak: ${maxStreak}\n📝 Total Questions: ${totalAttempts}\n🔑 Verification Code: ${code}`;
+    const shareText = `🎮 Labyrinth of Choice Conquered!\n👤 Adventurer: ${username}\n⏱️ Time: ${timeString}\n🎯 Accuracy: ${accuracy}%\n🔥 Best Streak: ${maxStreak}\n📝 Total Questions: ${totalAttempts}\n🔑 Verification Code: ${code}`;
     
     navigator.clipboard.writeText(shareText).then(() => {
         const btn = document.getElementById("shareBtn");
