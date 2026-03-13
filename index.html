@@ -382,6 +382,21 @@ hard: [
 ]
 };
 
+function shuffleOptions(question){
+
+    const correctAnswer = question.options[question.a];
+
+    for(let i = question.options.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [question.options[i], question.options[j]] =
+        [question.options[j], question.options[i]];
+    }
+
+    question.a = question.options.indexOf(correctAnswer);
+
+    return question;
+}
+    
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 function getMUPerDollar() {
@@ -390,8 +405,9 @@ function getMUPerDollar() {
     return {
         q: `A consumer receives MUx = ${mu} from good X. The price of X is $${price}. What is the Marginal Utility per dollar?`,
         options: [`${(mu/price).toFixed(1)}`, `${mu}`, `${price/mu}`, `${(mu*price)}`],
-        a: 0
+        a: 0, feedback:`MU per dollar = MU / Price = ${mu} / ${price} = ${(mu/price).toFixed(1)}`
     };
+    
 }
 
 function getEquilibriumCheck() {
@@ -405,8 +421,9 @@ function getEquilibriumCheck() {
     return {
         q: `A consumer is in equilibrium. MUx = ${muX} and Px = $${pX}. If the price of Good Y (Py) is $${pY}, what must be the Marginal Utility of Good Y (MUy)?`,
         options: [`${correctMUy}`, `${correctMUy / 2}`, `${correctMUy + 10}`, `${muX}`],
-        a: 0
+        a: 0, feedback:`Consumer equilibrium requires MUx/Px = MUy/Py. ${muX}/${pX} = ${ratio}. So MUy must equal ${correctMUy}.`
     };
+    
 }
 function getElasticityCalc() {
     // Generate two price points
@@ -446,8 +463,9 @@ return {
             "1.00 (Unit Elastic)"
         ],
         a: 0,
-        hint: "Arc Elasticity = [(Q2-Q1) / ((Q1+Q2)/2)] / [(P2-P1) / ((P1+P2)/2)]"
+        hint: "Arc Elasticity = [(Q2-Q1) / ((Q1+Q2)/2)] / [(P2-P1) / ((P1+P2)/2)]", feedback:`Arc Elasticity = [(Q2-Q1)/((Q1+Q2)/2)] / [(P2-P1)/((P1+P2)/2)]. Elasticity ≈ ${elasticity}.`
     };
+    
 }
 
 function getConsumerSurplusCalc() {
@@ -467,9 +485,9 @@ function getConsumerSurplusCalc() {
             `$${wtp - finalPrice}`, 
             `$${priceDrop + 10}`, 
             `$${wtp - initialPrice}`
-        ],
-        a: 0,
+        ],a: 0, feedback:`Consumer surplus increases by the change in price: ${initialPrice} - ${finalPrice} = ${surplusIncrease}.`
     };
+    
 }
 
 const calculationGenerators = [
