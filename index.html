@@ -155,24 +155,26 @@ h2{ text-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 20px rgba(251,191,36,0.2); 
 <script>
 const bgMusic = new Audio('545057__szegvari__monk-chant-fantasy.wav'); 
 bgMusic.loop = true; 
-bgMusic.volume = 0.1; // Adjusted slightly for a nice background level
+bgMusic.volume = 0.1; 
+
 const sfxMilestone = new Audio('387232__steaq__badge-coin-win.wav');
-const sfxVictory = new Audio('220184__gameaudio__win-spacey.wav'); // New Victory Sound
+const sfxVictory = new Audio('220184__gameaudio__win-spacey.wav');
 
-let totalAttempts = 0;
-let correctAnswers = 0; 
-let maxStreak = 0; 
-
-// Initial state: hide the game until the start screen is cleared
+// 1. Initial UI State: Hide game until startGame runs
 document.getElementById("gameBox").style.display = "none";
 document.querySelectorAll(".torch").forEach(t => t.style.display = "none");
 
+// 2. Global Variables (Declared only ONCE)
+let totalAttempts = 0;
+let correctAnswers = 0; 
+let maxStreak = 0; 
 let username = "";
 let streak = 0; 
-let startTime;
+let startTime; // Will be set in startGame()
 let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
 let currentQuestion;
 
+// 3. Entry Logic
 function startGame() {
     let inputName = document.getElementById("usernameInput").value.trim();
     if (!inputName) {
@@ -188,17 +190,21 @@ function startGame() {
     document.getElementById("gameBox").style.display = "block";
     document.querySelectorAll(".torch").forEach(t => t.style.display = "block");
     
-    // Start the atmosphere and timer
+    // Start atmosphere and timer
     bgMusic.play().catch(e => console.log("Audio started"));
     startTime = Date.now(); 
     loadQuestion();
 }
-  
-let streak = 0; // Add this with your other variables
-let startTime = Date.now();
-let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
-let currentQuestion;
 
+// 4. Enter Key Support
+document.getElementById("usernameInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        startGame();
+    }
+});
+
+// 5. Your Lore & Logic (Area Names)
 function getAreaName(r) {
     if (r <= 9) return "The Dimly Lit Archives";
     if (r === 10) return "The Warden's Gate";
@@ -209,6 +215,7 @@ function getAreaName(r) {
     return "The Sovereign's Throne";
 }
 
+// --- Question Pools follow below ---
 const questionBanks = {
     easyBoss:[{q:"The 'Law of Diminishing Marginal Utility' implies that as consumption of a good increases...",options:["Marginal utility eventually decreases","Total utility eventually becomes negative","Price must fall","Demand becomes vertical"],a:0}],
     mediumBoss:[{q:"If the substitution effect and income effect move in opposite directions, and the substitution effect is stronger, the good is...",options:["Normal","Inferior (non-Giffen)","A Giffen good","A perfect complement"],a:1}],
@@ -586,20 +593,23 @@ document.getElementById("gameBox").innerHTML = `
             }, 1000);
             return;
         }
-    } else {
-        // Reset streak on wrong answer
+} else {
         streak = 0;
-        document.getElementById("streakDisplay").innerText = "";
+        const isBossRoom = (room === 10 || room === 20 || room === 30);
         
-        let setback = (room >= 26) ? 5 : (room === 10 || room === 20 || room === 30) ? 6 : 3;
-        room = Math.max(1, room - setback);
-        document.getElementById("message").innerText = `Incorrect! Fell back ${setback} rooms.`;
-        document.getElementById("gameBox").classList.add("hit");
-        setTimeout(() => document.getElementById("gameBox").classList.remove("hit"), 500);
+        if (isBossRoom) {
+            room = Math.max(1, room - 3); // Boss setback: 3
+        } else if (room >= 21) {
+            room = Math.max(1, room - 2); // Corridor setback: 2
+        } else {
+            room = Math.max(1, room - 1); // Standard setback: 1
+        }
+        
+        localStorage.setItem("gauntletRoom", room);
+        sfxFail.play().catch(e => {}); 
+        alert(`Incorrect! The Archives reject your answer. You fall back to Room ${room}.`);
+        loadQuestion();
     }
-    localStorage.setItem("gauntletRoom", room);
-    loadQuestion();
-}
 
 function shuffleArray(arr){
     for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
@@ -642,6 +652,9 @@ function formatTime(ms) {
             btn.style.background = "#374151";
         }, 2000);
     });
+}
+  track.appendChild(box);
+  }
 }
   // Allow the 'Enter' key to trigger the start of the game
 document.getElementById("usernameInput").addEventListener("keypress", function(event) {
