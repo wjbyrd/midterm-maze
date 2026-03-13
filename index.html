@@ -228,6 +228,8 @@ document.querySelectorAll(".torch").forEach(t => t.style.display = "none");
 
 // 2. Global Variables (Declared only ONCE)
 let totalAttempts = 0;
+let bossHealth = 3; 
+let bossPool = [];
 let correctAnswers = 0; 
 let maxStreak = 0; 
 let username = "";
@@ -280,17 +282,17 @@ function getAreaName(r) {
 // --- Question Pools follow below ---
 const questionBanks = {
     easyBoss:[
-        {q:"A consumer maximizes utility when...",options:["The marginal rate of substitution equals the price ratio","Income is completely spent","Utility is highest possible","Prices are equal across goods"],a:0,feedback:"Utility maximization occurs where the marginal rate of substitution equals the price ratio."}],
+        {q:"A consumer maximizes utility when...",options:["The marginal rate of substitution equals the price ratio","Income is completely spent","Utility is highest possible","Prices are equal across goods"],a:0,feedback:"Utility maximization occurs where the marginal rate of substitution equals the price ratio."},
         {q:"A consumer's marginal utilities are MUx = 24 and MUy = 12. The price of X is $6 and the price of Y is $3. Is the consumer currently maximizing utility?",options:["Yes, the consumer is in equilibrium","No, the consumer should buy more X","No, the consumer should buy more Y","Not enough information"],a:0,feedback:"MUx/Px = 24/6 = 4 and MUy/Py = 12/3 = 4. Since marginal utility per dollar is equal, the consumer is maximizing utility."},
         {q:"A consumer has MUx/Px = 6 and MUy/Py = 3. What adjustment should the consumer make to maximize utility?",options:["Buy more X and less Y","Buy more Y and less X","Buy equal amounts of both goods","Reduce consumption of both goods"],a:0,feedback:"Consumers increase consumption of the good with the higher marginal utility per dollar until the ratios equalize."}
-    ]
+    ],
     mediumBoss:[
-        {q:"If the substitution effect and income effect move in opposite directions, and the substitution effect is stronger, the good is...",options:["Normal","Inferior (non-Giffen)","A Giffen good","A perfect complement"],a:1}],
+        {q:"If the substitution effect and income effect move in opposite directions, and the substitution effect is stronger, the good is...",options:["Normal","Inferior (non-Giffen)","A Giffen good","A perfect complement"],a:1},
         {q:"When the price of a normal good falls, which combination of effects explains the change in quantity demanded?",options:["Substitution effect increases demand and income effect increases demand","Substitution effect increases demand and income effect decreases demand","Substitution effect decreases demand and income effect increases demand","Both effects decrease demand"],a:0,feedback:"For normal goods, both substitution and income effects increase quantity demanded when price falls."},
         {q:"When the price of an inferior good falls, the substitution effect and income effect...",options:["Work in opposite directions","Both increase demand","Both decrease demand","Eliminate demand"],a:0,feedback:"The substitution effect increases demand, but the income effect reduces demand for inferior goods."}
-    ]
+    ],
     finalBoss:[
-        {q:"A firm observes that when it lowers price, total revenue rises. What must be true about demand at the original price?",options:["Demand was elastic","Demand was inelastic","Demand was perfectly inelastic","Demand was unit elastic"],a:0}
+        {q:"A firm observes that when it lowers price, total revenue rises. What must be true about demand at the original price?",options:["Demand was elastic","Demand was inelastic","Demand was perfectly inelastic","Demand was unit elastic"],a:0},
         {q:"The price of a product rises from $10 to $12 and quantity demanded falls from 100 to 80. Using the midpoint method, what happens to total revenue?",options:["Total revenue decreases","Total revenue increases","Total revenue stays the same","Total revenue becomes zero"],a:0,feedback:"Elasticity ≈ 1.22 (elastic). When demand is elastic, price increases reduce total revenue."},
         {q:"A consumer faces Px = $4 and Py = $2. If MUx = 32, what must MUy equal for the consumer to be in equilibrium?",options:["16","8","32","4"],a:0,feedback:"Equilibrium requires MUx/Px = MUy/Py. 32/4 = 8, so MUy/2 = 8 → MUy = 16."}              
     ],
@@ -535,6 +537,25 @@ function updateMazeTrack() {
 
 function loadQuestion(){
     updateMazeTrack();
+    const questionElement = document.getElementById("question");
+    const choicesElement = document.getElementById("choices");
+    const msgElement = document.getElementById("message");
+
+    if (room === 10 || room === 20 || room === 30) {
+        // Only refresh the boss pool if health is full (start of battle)
+        if (bossHealth === 3) {
+            const pool = room === 10 ? boss10Pool : (room === 20 ? boss20Pool : boss30Pool);
+            bossPool = [...pool].sort(() => Math.random() - 0.5);
+        }
+        // Current question is determined by how much health the boss has left
+        currentQuestion = bossPool[3 - bossHealth];
+        questionElement.innerHTML = `<span style='color:#f87171; font-weight:bold;'>BOSS LEVEL: </span>` + currentQuestion.q;
+    } else {
+        // --- KEEP YOUR EXISTING POOL LOGIC BELOW ---
+        let pool = room <= 10 ? easy : (room <= 20 ? medium : hard);
+        currentQuestion = pool[Math.floor(Math.random() * pool.length)];
+        questionElement.innerText = `Room ${room}: ` + currentQuestion.q;
+    }
 
     // 1. Determine difficulty and room count
     let diff = (room<=9) ? "easy" : (room==10) ? "easyBoss" : (room<=19) ? "medium" : (room==20) ? "mediumBoss" : (room<=29) ? "hard" : "finalBoss";
@@ -572,36 +593,46 @@ function loadQuestion(){
     let opts = q.options.map((opt,i)=>({text:opt,index:i}));
     opts = shuffleArray(opts);
     document.getElementById("answers").innerHTML = opts.map(o=>`<button onclick="answer(${o.index})">${o.text}</button>`).join("");
+
+    displayQuestion();
 }
 
 function answer(choice) {
     totalAttempts++;
     const msgElement = document.getElementById("message");
-
-    if (bgMusic.paused) {
-        bgMusic.play();
-    }
+    if (bgMusic.paused) bgMusic.play();
 
     if (choice === currentQuestion.a) {
         // --- CORRECT ANSWER LOGIC ---
         correctAnswers++;
         streak++;
         if (streak > maxStreak) maxStreak = streak;
-
-        // 1. Handle Streak Milestones
         handleStreakVisuals();
 
-        // 2. Check for Boss/Knowledge Rooms (10, 20, 30)
+        // Check if we are in a Boss Battle
         if (room === 10 || room === 20 || room === 30) {
-            showKnowledgeRoom(room);
-            return; 
+            bossHealth--;
+            
+            if (bossHealth > 0) {
+                // Boss is still alive!
+                sfxMilestone.play(); // Play a "hit" sound
+                msgElement.innerHTML = `<span class='fade-out-text' style='color:#f87171;'>HIT! Boss Health: ${bossHealth}/3</span>`;
+                
+                // Load the next question from the boss pool
+                currentQuestion = bossPool[3 - bossHealth]; 
+                displayQuestion();
+                return; 
+            } else {
+                // Boss Defeated!
+                showKnowledgeRoom(room);
+                bossHealth = 3; // Reset for next boss
+                return;
+            }
         }
 
-        // 3. Normal Room Progression with Dynamic Feedback
-        // This looks for your specific feedback in the question pool
-        const feedbackText = "Correct! " + currentQuestion.feedback + " Moving deeper...";
+        // Normal Room Progression
+        const feedbackText = currentQuestion.feedback || "Correct! Moving deeper...";
         msgElement.innerHTML = `<span class='fade-out-text'>${feedbackText}</span>`;
-
         room++;
         localStorage.setItem("gauntletRoom", room);
         loadQuestion();
@@ -611,17 +642,16 @@ function answer(choice) {
         streak = 0;
         document.getElementById("streakDisplay").innerText = "";
         
-        // Penalties for failing
+        // Penalties (Bosses reset your progress more severely)
         if (room === 10 || room === 20 || room === 30) {
+            bossHealth = 3; // Reset boss health on failure
             room = Math.max(1, room - 3); 
-        } else if (room >= 21) {
-            room = Math.max(1, room - 2); 
         } else {
-            room = Math.max(1, room - 1); 
+            room = Math.max(1, room - (room >= 21 ? 2 : 1)); 
         }
 
         localStorage.setItem("gauntletRoom", room);
-        alert(`Incorrect! You trip in the darkness and tumble back to Room ${room}.`);
+        alert(`Incorrect! The Boss repels you! Back to Room ${room}.`);
         loadQuestion();
     }
 }
@@ -697,13 +727,13 @@ function showKnowledgeRoom(bossRoom) {
 
     if (bossRoom === 10) {
         title = "WARDEN OF INDIFFERENCE DEFEATED (Archive 10.1)";
-        summary = "Consumers have consistent preferences represented by indifference curves. They face trade-offs determined by their budget constraint. Optimal consumption occurs where the marginal rate of substitution equals the price ratio. The Labyrinth grows deeper...";
+        summary = "As the Warden fades you find the Seal of Preferences. Consumers have consistent preferences represented by indifference curves. They face trade-offs determined by their budget constraint. Optimal consumption occurs where the marginal rate of substitution equals the price ratio. The Labyrinth grows deeper...";
     } else if (bossRoom === 20) {
         title = "DECOMPOSER OF CHOICE DEFEATED (Archive 20.1)";
-        summary = "You have conquered the dual nature of price changes. You now distinguish between how price changes affect purchasing power (Income Effect) and relative attractiveness (Substitution Effect).";
+        summary = "With the Decomposer's defeat you claim the Artifcat of Price Effects. You have conquered the dual nature of price changes. You now distinguish between how price changes affect purchasing power (Income Effect) and relative attractiveness (Substitution Effect).";
     } else if (bossRoom === 30) {
         title = "SOVEREIGN OF ELASTICITY DEFEATED (Final Archive)";
-        summary = "The final seal is broken. You have proven your mastery over Market Responsiveness and the mathematical laws that govern Demand, Elasticity, and Total Revenue.";
+        summary = "With the Sovereign finally beaten, you claim the Scepter of Elasticity. You have proven your mastery over Market Responsiveness and the mathematical laws that govern Demand, Elasticity, and Total Revenue.";
     }
 
     // Update the UI
