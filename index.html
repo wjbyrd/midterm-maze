@@ -333,14 +333,10 @@ bossMusic.play().catch(e=>console.log("Boss music blocked"));
 }
 
 function playExplorationMusic(){
-
 bossMusic.pause();
-
 if(!bgMusic.paused) return;
-
 bgMusic.currentTime = 0;
 bgMusic.play().catch(e=>console.log("Music blocked"));
-
 }
 
 const hallwayImages = [
@@ -870,6 +866,13 @@ currentQuestion = shuffleOptions(
     // 4. Update Hints and Draw Buttons
     document.getElementById("formulaHint").innerText = currentQuestion.hint ? "💡 Hint: " + currentQuestion.hint : "";
     displayQuestion();
+  // --- Final Boss Entrance Shake ---
+if(diff === "finalBoss"){
+setTimeout(()=>{
+triggerBossShake();
+setTimeout(triggerBossShake,450);
+},200);
+}
 }
     
 function displayQuestion() {
@@ -920,17 +923,11 @@ function answer(choice) {
         }
 
 msgElement.innerHTML = "";
-      if(diff === "finalBoss"){
-setTimeout(()=>{
-triggerBossShake();
-setTimeout(triggerBossShake,450);
-},200);
-}
 
 room++;
 localStorage.setItem("gauntletRoom", room);
-
 showHallwayTransition(currentQuestion.feedback);
+
     } else {
         streak = 0;
         // If question has a concept tag, trigger a reinforcement detour
