@@ -168,13 +168,13 @@ max-width:320px;
 .left-torch { left: max(10px, calc(50% - 410px)); }
 .right-torch { right: max(10px, calc(50% - 410px)); 
              transform: scaleX(-1);}
-
-  @keyframes bossShake {
+  
+@keyframes bossShake {
 0% { transform: translate(0,0); }
-20% { transform: translate(-6px,4px); }
-40% { transform: translate(6px,-4px); }
-60% { transform: translate(-4px,-6px); }
-80% { transform: translate(4px,6px); }
+20% { transform: translate(-12px,8px); }
+40% { transform: translate(12px,-8px); }
+60% { transform: translate(-10px,-10px); }
+80% { transform: translate(10px,10px); }
 100% { transform: translate(0,0); }
 }
 
@@ -666,11 +666,6 @@ function getElasticityCalc() {
     const elasticityVal = Math.abs((chgQ / midQ) / (chgP / midP));
     const elasticity = elasticityVal.toFixed(2);
 
-    let label = "";
-    if (elasticityVal > 1) label = "Elastic";
-    else if (elasticityVal < 1) label = "Inelastic";
-    else label = "Unit Elastic";
-
     const correct = `${elasticity} (${label})`;
 
     // Distractors built around the true value
@@ -929,6 +924,12 @@ function answer(choice) {
         }
 
 msgElement.innerHTML = "";
+      if(diff === "finalBoss"){
+setTimeout(()=>{
+triggerBossShake();
+setTimeout(triggerBossShake,450);
+},200);
+}
 
 room++;
 localStorage.setItem("gauntletRoom", room);
