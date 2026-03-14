@@ -382,7 +382,15 @@ let currentQuestion = null;
 let detourActive = false;
 let detourReturnRoom = null;
 let lastTypes = [];
-  
+let easyCycle = 0 
+let usedQuestions = {
+easy: [],
+medium: [],
+hard: [],
+easyBoss: [],
+mediumBoss: [],
+finalBoss: []
+};
 
 // Restore saved username if it exists
 const savedUser = localStorage.getItem("gauntletUser");
@@ -476,23 +484,29 @@ const questionBanks = {
 {q:"If two bundles lie on the same indifference curve...",options:["They provide equal utility","They cost the same","They contain equal goods","They maximize income"],a:0,tag:"indifference",type:"definition",feedback:"Bundles on the same indifference curve provide equal utility."},
 {q:"A complete preference ordering means...",options:["Consumers can compare any two bundles","Consumers always prefer cheaper goods","Consumers never change preferences","Consumers prefer equal bundles"],a:0,tag:"preferences",type:"definition",feedback:"Completeness means all bundles can be ranked."},
 {q:"Transitive preferences imply...",options:["If A is preferred to B and B to C, then A is preferred to C","Consumers prefer cheaper goods","Income increases utility automatically","Demand curves shift"],a:0,tag:"preferences",type:"definition",feedback:"Transitivity ensures consistent ranking."},
-{q:"A consumer receives a pay raise while prices stay the same. What happens to the budget constraint?",options:["Rotates inward","Shifts outward","Rotates around Y axis","Becomes vertical"],a:1,tag:"budget",type:"interpretation"},
-{q:"The price of good X falls while income stays the same. What happens to the budget constraint?",options:["Rotates outward on the X-axis","Shifts outward parallel","Rotates inward","Does not change"],a:0,tag:"budget",type:"interpretation"},
-{q:"A consumer moves to a higher indifference curve after income rises. What does this indicate?",options:["Higher utility","Lower prices","Lower income","Demand collapse"],a:0,tag:"indifference",type:"interpretation"},
-{q:"If the price of a good rises and consumers buy less of it, this reflects...",options:["The law of demand","Perfect competition","Elastic supply","Producer surplus"],a:0,tag:"demand",type:"interpretation"},
-{q:"When the price of coffee rises, many consumers switch to tea. Coffee and tea are...",options:["Substitutes","Complements","Independent goods","Inferior goods"],a:0,tag:"demand",type:"interpretation"},
-{q:"If the price of printers rises and fewer people buy ink cartridges, these goods are...",options:["Complements","Substitutes","Inferior goods","Luxury goods"],a:0,tag:"demand",type:"interpretation"},
-{q:"If price falls and total revenue increases, demand must be...",options:["Elastic","Inelastic","Unit elastic","Perfectly inelastic"],a:0,tag:"elasticity",type:"interpretation"},
-{q:"A consumer chooses a bundle where the indifference curve touches the budget line. This bundle...",options:["Maximizes utility","Minimizes spending","Maximizes income","Eliminates scarcity"],a:0,tag:"equilibrium",type:"interpretation"},
-{q:"If both goods become cheaper while income stays constant, what happens to purchasing power?",options:["It increases","It decreases","It stays the same","It disappears"],a:0,tag:"budget",type:"interpretation"},
-{q:"If more consumers enter a market while prices stay the same, market demand will...",options:["Increase","Decrease","Stay constant","Become perfectly elastic"],a:0,tag:"demand",type:"interpretation"},
-{q:"A bundle lies inside the budget constraint but not on the highest indifference curve. This bundle is...",options:["Affordable but not optimal","Impossible","Utility maximizing","Profit maximizing"],a:0,tag:"budget",type:"interpretation"},
-{q:"If consumers are willing to trade fewer units of good Y for each additional unit of X, this reflects...",options:["Diminishing marginal rate of substitution","Increasing elasticity","Perfect substitutes","Budget rotation"],a:0,tag:"indifference",type:"interpretation"},   
-{q:"A demand curve becomes steeper. What can we conclude about elasticity?",options:["It must be more elastic","It must be less elastic","Elasticity cannot be determined from slope alone","Demand becomes unit elastic"],a:2,tag:"elasticity",type:"trap"},
-{q:"A bundle lies on the budget line. This means...",options:["It is affordable but not necessarily optimal","It always maximizes utility","It is outside the budget","It is inefficient"],a:0,tag:"budget",type:"trap"},
-{q:"If income increases, demand for an inferior good will...",options:["Decrease","Increase","Stay constant","Become perfectly elastic"],a:0,tag:"demand",type:"trap"},
-{q:"Two indifference curves intersect on a graph. What does this imply?",options:["Preferences are inconsistent","Utility is maximized","Prices changed","Demand increased"],a:0,tag:"indifference",type:"trap"}
-    ],
+{q:"A consumer receives a pay raise while prices stay the same. What happens to the budget constraint?",options:["Rotates inward","Shifts outward","Rotates around Y axis","Becomes vertical"],a:1,tag:"budget",type:"interpretation",feedback:"When income increases while prices stay constant, consumers can afford more of both goods. The budget constraint shifts outward in a parallel movement."},
+{q:"The price of good X falls while income stays the same. What happens to the budget constraint?",options:["Rotates outward on the X-axis","Shifts outward parallel","Rotates inward","Does not change"],a:0,tag:"budget",type:"interpretation",feedback:"A fall in the price of X makes X relatively cheaper. The budget line rotates outward along the X-axis while the Y intercept stays the same."},
+{q:"A consumer moves to a higher indifference curve after income rises. What does this indicate?",options:["Higher utility","Lower prices","Lower income","Demand collapse"],a:0,tag:"indifference",type:"interpretation",feedback:"Higher indifference curves represent higher levels of utility. More income allows the consumer to reach a more preferred bundle."},
+{q:"If the price of a good rises and consumers buy less of it, this reflects...",options:["The law of demand","Perfect competition","Elastic supply","Producer surplus"],a:0,tag:"demand",type:"interpretation",feedback:"The law of demand states that as price increases, quantity demanded typically falls, all else equal."},
+{q:"When the price of coffee rises, many consumers switch to tea. Coffee and tea are...",options:["Substitutes","Complements","Independent goods","Inferior goods"],a:0,tag:"demand",type:"interpretation",feedback:"Substitute goods replace each other. When the price of coffee rises, consumers switch to alternatives like tea."},
+{q:"If the price of printers rises and fewer people buy ink cartridges, these goods are...",options:["Complements","Substitutes","Inferior goods","Luxury goods"],a:0,tag:"demand",type:"interpretation",feedback:"Complement goods are used together. When printers become more expensive, fewer are purchased, reducing demand for ink cartridges."},
+{q:"If price falls and total revenue increases, demand must be...",options:["Elastic","Inelastic","Unit elastic","Perfectly inelastic"],a:0,tag:"elasticity",type:"interpretation",feedback:"When demand is elastic, quantity demanded rises proportionally more than price falls, causing total revenue to increase."},
+{q:"A consumer chooses a bundle where the indifference curve touches the budget line. This bundle...",options:["Maximizes utility","Minimizes spending","Maximizes income","Eliminates scarcity"],a:0,tag:"equilibrium",type:"interpretation",feedback:"Consumer equilibrium occurs where the highest attainable indifference curve is tangent to the budget line."},
+{q:"If both goods become cheaper while income stays constant, what happens to purchasing power?",options:["It increases","It decreases","It stays the same","It disappears"],a:0,tag:"budget",type:"interpretation",feedback:"When prices fall while income stays constant, consumers can afford more goods. Purchasing power increases."},
+{q:"If more consumers enter a market while prices stay the same, market demand will...",options:["Increase","Decrease","Stay constant","Become perfectly elastic"],a:0,tag:"demand",type:"interpretation",feedback:"Market demand is the horizontal sum of individual demands. More consumers increase total demand."},
+{q:"A bundle lies inside the budget constraint but not on the highest indifference curve. This bundle is...",options:["Affordable but not optimal","Impossible","Utility maximizing","Profit maximizing"],a:0,tag:"budget",type:"interpretation",feedback:"Bundles inside the budget constraint are affordable but do not maximize utility because better bundles exist on higher indifference curves."},
+{q:"If consumers are willing to trade fewer units of good Y for each additional unit of X, this reflects...",options:["Diminishing marginal rate of substitution","Increasing elasticity","Perfect substitutes","Budget rotation"],a:0,tag:"indifference",type:"interpretation",feedback:"Diminishing marginal rate of substitution means consumers give up fewer units of one good as they consume more of the other."},
+{q:"A demand curve becomes steeper. What can we conclude about elasticity?",options:["It must be more elastic","It must be less elastic","Elasticity cannot be determined from slope alone","Demand becomes unit elastic"],a:2,tag:"elasticity",type:"trap",feedback:"Elasticity depends on both slope and position on the curve. A steeper curve does not automatically mean demand is less elastic."},
+{q:"A bundle lies on the budget line. This means...",options:["It is affordable but not necessarily optimal","It always maximizes utility","It is outside the budget","It is inefficient"],a:0,tag:"budget",type:"trap",feedback:"Points on the budget line are affordable, but only the point tangent to the highest indifference curve maximizes utility."},
+{q:"If income increases, demand for an inferior good will...",options:["Decrease","Increase","Stay constant","Become perfectly elastic"],a:0,tag:"demand",type:"trap",feedback:"Inferior goods are purchased less when income rises because consumers shift toward higher-quality alternatives."},
+{q:"Two indifference curves intersect on a graph. What does this imply?",options:["Preferences are inconsistent","Utility is maximized","Prices changed","Demand increased"],a:0,tag:"indifference",type:"trap",feedback:"Indifference curves cannot intersect. If they did, it would violate the assumption of consistent (transitive) preferences."},
+{q:"If the price of a good falls, demand has...",options:["Increased","Decreased","Not changed","Become elastic"],a:2,tag:"demand",type:"trap",feedback:"A price change causes a movement along the demand curve, not a shift of the curve. Demand itself has not changed."},
+{q:"A point on a demand curve shows...",options:["The quantity demanded at a particular price","All possible prices consumers prefer","Consumer income","Producer costs"],a:0,tag:"demand",type:"trap",feedback:"Each point on a demand curve shows the quantity consumers are willing and able to buy at a specific price."},
+{q:"If income increases and a consumer buys more of a good, that good must be...",options:["Normal","Inferior","Elastic","A complement"],a:0,tag:"demand",type:"trap",feedback:"Normal goods are purchased more when income rises. Inferior goods move in the opposite direction."},
+{q:"If the price of good X changes and the budget line rotates, what stays constant?",options:["Income","Utility","Demand","Preferences"],a:0,tag:"budget",type:"trap",feedback:"When a price changes, the budget line rotates but income remains the same."},
+{q:"A consumer chooses a bundle inside the budget constraint. What does this mean?",options:["They could afford more but chose not to","They spent all income","The bundle is impossible","Utility is maximized"],a:0,tag:"budget",type:"trap",feedback:"Bundles inside the budget constraint are affordable but do not use all available income."},
+{q:"If the price of both goods doubles and income also doubles, the budget constraint...",options:["Does not change","Shifts outward","Rotates inward","Becomes vertical"],a:0,tag:"budget",type:"trap",feedback:"If both prices and income double, purchasing power stays the same and the budget constraint remains unchanged."}
+      ],
 medium: [
 {q:"An individual demand curve is derived from...",options:["Budget constraints only","Optimal consumption bundles at different prices","Utility levels only","Production functions"],a:1,tag:"demand",feedback:"A demand curve traces the optimal bundle chosen at different prices."},
 {q:"When price falls, the optimal bundle typically moves...",options:["Along the demand curve","Off the demand curve","To a different market","Randomly"],a:0,tag:"demand",feedback:"Price changes move consumers along the demand curve."},
@@ -601,6 +615,22 @@ elasticity:[
 {q:"If elasticity is less than 1, demand is...",options:["Inelastic","Elastic","Unit elastic","Perfectly elastic"],a:0,feedback:"Inelastic demand means quantity demanded responds weakly to price changes."}]
 };
     
+function randomEasy(){
+
+let type
+
+if(easyCycle === 0) type = "definition"
+if(easyCycle === 1) type = "interpretation"
+if(easyCycle === 2) type = "trap"
+
+easyCycle = (easyCycle + 1) % 3
+
+let pool = questionBanks.easy.filter(q => q.type === type)
+
+return pickRandom(pool)
+
+}
+  
 function shuffleOptions(question){
 
 let q = {
@@ -706,14 +736,6 @@ function getElasticityCalc() {
     };
 
     options = Array.from(options);
-
-    return {
-        q: `When the price of a good increases from $${p1} to $${p2}, the quantity demanded decreases from ${q1} units to ${q2} units. Using the Midpoint (Arc) Method, what is the price elasticity of demand?`,
-        options: options,
-        a: options.indexOf(correct),
-        hint: "Arc Elasticity = [(Q2-Q1)/((Q1+Q2)/2)] / [(P2-P1)/((P1+P2)/2)]",
-        feedback: `Elasticity ≈ ${elasticity}. Demand is ${label}.`
-    };
 }
   
 function getConsumerSurplusCalc() {
@@ -897,10 +919,12 @@ const generator = pickCalcGenerator();
 currentQuestion = shuffleOptions(generator());
 }
 else{
-    const pool = questionBanks[diff];
-currentQuestion = shuffleOptions(
-    pickRandom(pool)
-    );
+if(diff === "easy"){
+currentQuestion = shuffleOptions(randomEasy());
+}else{
+const pool = questionBanks[diff];
+currentQuestion = shuffleOptions(pickRandom(pool));
+}
 }
         bossMsg.innerText = (room === 9 || room === 19 || room === 29) ? "⚠️ DANGER: BOSS DETECTED IN NEXT ROOM ⚠️" : "";
         bossMsg.style.color = "#ef4444";
