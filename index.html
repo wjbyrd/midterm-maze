@@ -169,6 +169,19 @@ max-width:320px;
 .right-torch { right: max(10px, calc(50% - 410px)); 
              transform: scaleX(-1);}
 
+  @keyframes bossShake {
+0% { transform: translate(0,0); }
+20% { transform: translate(-6px,4px); }
+40% { transform: translate(6px,-4px); }
+60% { transform: translate(-4px,-6px); }
+80% { transform: translate(4px,6px); }
+100% { transform: translate(0,0); }
+}
+
+.boss-shake{
+animation: bossShake 0.6s ease;
+}
+
 .fullscreenBtn{
 position:absolute;
 top:12px;
@@ -814,11 +827,16 @@ function loadQuestion() {
 
     // 1. Determine Difficulty and Boss Status
     let diff = (room <= 9) ? "easy" : (room === 10) ? "easyBoss" : (room <= 19) ? "medium" : (room === 20) ? "mediumBoss" : (room <= 25) ? "hard" : (room <= 29) ? "calculation" : "finalBoss";
-    if(diff.includes("Boss")){
-    playBossMusic();
-    }else{
-    playExplorationMusic();
-  }
+if(diff.includes("Boss")){
+playBossMusic();
+}else{
+playExplorationMusic();
+}
+
+if(diff === "finalBoss"){
+triggerBossShake();
+setTimeout(triggerBossShake,400);
+}
     const isBoss = diff.includes("Boss");
     
     // 2. UI & Progress Updates
@@ -909,11 +927,12 @@ function answer(choice) {
             }
         }
 
-        const feedbackText = "Correct! " + currentQuestion.feedback + " Moving deeper...";
-        msgElement.innerHTML = `<span class='fade-out-text'>${feedbackText}</span>`;
-        room++;
-        localStorage.setItem("gauntletRoom", room);
-        showHallwayTransition(currentQuestion.feedback);
+msgElement.innerHTML = "";
+
+room++;
+localStorage.setItem("gauntletRoom", room);
+
+showHallwayTransition(currentQuestion.feedback);
     } else {
         streak = 0;
         // If question has a concept tag, trigger a reinforcement detour
@@ -1007,6 +1026,17 @@ loadQuestion();
 
 }
   
+function triggerBossShake(){
+  const box = document.getElementById("gameBox");
+
+  box.classList.add("boss-shake");
+
+  setTimeout(()=>{
+  box.classList.remove("boss-shake");
+  },600);
+
+}
+  
 function handleVictory() {
     bgMusic.pause();
     bossMusic.pause();
@@ -1045,10 +1075,13 @@ function handleVictory() {
 }
   
 function showKnowledgeRoom(bossRoom) {
+    playExplorationMusic();  
+  
     const qContainer = document.getElementById("question");
     const aContainer = document.getElementById("answers");
     const msgElement = document.getElementById("message");
-
+  
+  
     // Clear the "Correct!" fade-out text so it doesn't stay on the summary screen
     msgElement.innerText = "";
     msgElement.className = "";
