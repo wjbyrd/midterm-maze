@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Archives of Microeconomics</title>
 <style>
 body{
@@ -11,7 +12,7 @@ font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    justify-content:flex-start;
     /* The Background: Dark overlay + Your Image */
     background: 
         linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.8)), 
@@ -114,12 +115,12 @@ max-width:320px;
     text-align: left;
 }
   
-#mazeTrack{
-    display:grid;
+#mazeTrack {
+    display: grid;
     grid-template-columns: repeat(10, 36px);
-    justify-content:center;
-    gap:10px;
-    margin:25px auto;
+    justify-content: center;
+    gap: 10px;
+    margin: 25px auto;
 }
        
 .maze-box{
@@ -201,8 +202,8 @@ height:20px;
 }
 
 #gameBox{
-width:95%;
-padding:18px;
+transform:scale(0.95);
+transform-origin:top center;
 }
 
 .answers button{
