@@ -852,7 +852,7 @@ playExplorationMusic();
         
         let bTitle = room === 10 ? "WARDEN OF INDIFFERENCE" : room === 20 ? "THE DECOMPOSER OF CHOICE" : "SOVEREIGN OF ELASTICITY";
         let bColor = room === 10 ? "#fbbf24" : room === 20 ? "#a855f7" : "#ef4444";
-        document.getElementById("srAnnouncements").innerText =`Boss encounter. ${bTitle}.`;
+        document.getElementById("srAnnouncements").innerText =`Boss encounter. ${bTitle}. Prepare yourself`;
         bossMsg.innerText = "⚠ BOSS ENCOUNTER ⚠";
         bossMsg.style.color = bColor;
         gameBox.style.setProperty('--bossColor', bColor);
@@ -968,6 +968,8 @@ if(!detourActive && currentQuestion.tag){
 
         const msgElement = document.getElementById("message");
         msgElement.innerHTML = `<span class='fade-out-text'>You falter… The labyrinth demands a concept check.</span>`;
+
+        document.getElementById("message").innerHTML = "You falter. The labyrinth demands a concept check.";
 
         displayQuestion();
         return;
