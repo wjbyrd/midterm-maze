@@ -216,10 +216,50 @@ transform-origin:top center;
 flex:1 1 100%;
 }
 }
-    
+
+#hallwayTransition{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
+url('hallway1.png');
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+font-size:26px;
+letter-spacing:2px;
+z-index:200;
+opacity:0;
+pointer-events:none;
+transition:opacity 1.2s ease;
+}
+
+#hallwayTransition.active{
+opacity:1;
+}
+
+#hallwayText{
+max-width:600px;
+background:rgba(0,0,0,0.55);
+padding:30px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.15);
+box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+  
 </style>
 </head>
 <body>
+<div id="hallwayTransition">
+<div id="hallwayText"></div>
+</div>
 <div id="startScreen">
     <h1 style="color:rgb(48, 187, 221); text-shadow:0 0 30px rgb(48, 187, 221); font-size:60px; margin-bottom:10px;">THE ARCHIVES OF MICROECONOMICS</h1>
     <h2 style="color:rgb(51, 140, 178); text-shadow:0 0 20px rgb(51, 140, 178); font-size:40px; margin-bottom:50px;">THE LABYRINTH OF CHOICE</h2>
@@ -255,6 +295,12 @@ bgMusic.volume = 0.1;
 const sfxMilestone = new Audio('387232__steaq__badge-coin-win.wav');
 const sfxVictory = new Audio('220184__gameaudio__win-spacey.wav');
 
+const hallwayImages = [
+"hallway1.png",
+"hallway2.png",
+"hallway3.png"
+];
+  
 function goFullscreen(){
 let el = document.documentElement;
 
@@ -828,7 +874,7 @@ function answer(choice) {
         msgElement.innerHTML = `<span class='fade-out-text'>${feedbackText}</span>`;
         room++;
         localStorage.setItem("gauntletRoom", room);
-        setTimeout(loadQuestion, 1000); // Small delay to read feedback
+        showHallwayTransition(currentQuestion.feedback);
     } else {
         streak = 0;
         // If question has a concept tag, trigger a reinforcement detour
@@ -893,6 +939,35 @@ function handleStreakVisuals() {
     }
 }
 
+function showHallwayTransition(feedback){
+
+const overlay = document.getElementById("hallwayTransition");
+const text = document.getElementById("hallwayText");
+
+// pick a random hallway image
+const randomHall = hallwayImages[Math.floor(Math.random()*hallwayImages.length)];
+
+overlay.style.background =
+`linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)), url('${randomHall}')`;
+
+overlay.style.backgroundSize = "cover";
+overlay.style.backgroundPosition = "center";
+
+text.innerHTML = `
+<div style="font-size:22px;margin-bottom:15px;color:#4ade80;">Correct.</div>
+<div style="font-size:18px;opacity:.9;">${feedback}</div>
+<div style="margin-top:25px;font-size:14px;opacity:.7;">You move deeper into the archives...</div>
+`;
+
+overlay.classList.add("active");
+
+setTimeout(()=>{
+overlay.classList.remove("active");
+loadQuestion();
+},2200);
+
+}
+  
 function handleVictory() {
     if (typeof bgMusic !== 'undefined') bgMusic.pause();
     if (typeof sfxVictory !== 'undefined') {
