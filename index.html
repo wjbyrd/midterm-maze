@@ -317,6 +317,7 @@ display:flex;
 flex-direction:column;
 align-items:center;
 gap:18px;
+display:none;
 }
 
 #artifactVault h3{
@@ -371,7 +372,7 @@ animation: relicPulse 3s infinite;
 color:#e2e8f0;
 font-weight:600;
 }
-  
+
 </style>
 </head>
 <body>
@@ -574,8 +575,9 @@ function startGame() {
     // Reveal the game and torches
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameBox").style.display = "block";
+    document.getElementById("artifactVault").style.display = "block";
     document.querySelectorAll(".torch").forEach(t => t.style.display = "block");
-
+    
   if(localStorage.getItem("vaultSeal")){
         document.getElementById("vaultSeal").classList.add("unlocked");
     }
@@ -614,6 +616,17 @@ function getAreaName(r) {
 };
   
 // --- Question Pools follow below ---
+const easyPools = {
+definition: questionBanks.easy.filter(q => q.type === "definition"),
+interpretation: questionBanks.easy.filter(q => q.type === "interpretation"),
+trap: questionBanks.easy.filter(q => q.type === "trap")
+};
+const mediumPools = {
+definition: questionBanks.medium.filter(q => q.type === "definition"),
+interpretation: questionBanks.medium.filter(q => q.type === "interpretation"),
+trap: questionBanks.medium.filter(q => q.type === "trap")
+};
+  
 const questionBanks = {
 easyBoss:[
 {q:"The Warden of Indifference challenges you. A consumer buys goods X and Y. Which condition must hold at the optimal bundle on an indifference curve?",options:["The marginal rate of substitution equals the price ratio","The consumer buys equal quantities of both goods","Income equals total utility","Prices of goods must be identical"],a:0,feedback:"Utility maximization occurs where the marginal rate of substitution equals the price ratio."},
@@ -812,31 +825,20 @@ elasticity:[
     
 function randomEasy(){
     let type;
-
     if(easyCycle === 0) type = "definition";
     if(easyCycle === 1) type = "interpretation";
     if(easyCycle === 2) type = "trap";
-
     easyCycle = (easyCycle + 1) % 3;
-
-    let pool = questionBanks.easy.filter(q => q.type === type);
-    return pickRandom(pool);
+    return pickRandom(easyPools[type]);
 }
 
 function randomMedium(){
-
 let type
-
 if(mediumCycle === 0) type = "interpretation"
 if(mediumCycle === 1) type = "trap"
 if(mediumCycle === 2) type = "definition"
-
 mediumCycle = (mediumCycle + 1) % 3
-
-let pool = questionBanks.medium.filter(q => q.type === type)
-
-return pickRandom(pool)
-
+return pickRandom(mediumPools[type]);
 }
   
 function shuffleOptions(question){
