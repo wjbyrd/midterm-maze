@@ -291,6 +291,10 @@ width:96px;
 margin-bottom:8px;
 }
   
+#artifactDrop img{
+filter: drop-shadow(0 0 12px rgba(56,189,248,.8));
+}
+  
 </style>
 </head>
 <body>
@@ -314,6 +318,8 @@ margin-bottom:8px;
     <button class="fullscreenBtn" onclick="goFullscreen()">Fullscreen</button>
     <div id="autosave">💾 Progress Autosaved</div>
 <div id="gameBox">
+  <img src="torch.gif" class="torch left-torch">
+  <img src="torch.gif" class="torch right-torch">
     <h2>The Labyrinth of Choice</h2>
     <p id="areaDisplay" class="area-title"></p>
     <div id="progressBar"><div id="progressFill"></div></div>
@@ -331,9 +337,7 @@ margin-bottom:8px;
     <h3 id="artifactTitle"></h3>
     <p id="artifactText"></p>
 </div>
-     <img src="torch.gif" class="torch right-torch">
-</div>
-
+     
 </div>
 <script>
 const bgMusic = new Audio('545057__szegvari__monk-chant-fantasy.wav'); 
