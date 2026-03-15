@@ -315,6 +315,11 @@ transform: scale(1.08);
 </div>
      <img src="torch.gif" class="torch right-torch">
 </div>
+  <div id="artifactDrop" style="display:none;text-align:center;margin-top:20px;">
+    <img id="artifactImage" width="96">
+    <h3 id="artifactTitle"></h3>
+    <p id="artifactText"></p>
+</div>
 <script>
 const bgMusic = new Audio('545057__szegvari__monk-chant-fantasy.wav'); 
 bgMusic.loop = true; 
@@ -400,6 +405,28 @@ elasticity:0,
 equilibrium:0
 };
 
+const artifacts = {
+
+seal:{
+img:"seal_of_preferences.png",
+title:"Seal of Preferences",
+text:"An ancient seal revealing the curves of desire. Where preferences meet the budget constraint, utility is maximized."
+},
+
+prism:{
+img:"prism_of_tradeoffs.png",
+title:"Prism of Tradeoffs",
+text:"A crystal that fractures a price change into its hidden forces: substitution toward cheaper goods and the pull of income on purchasing power."
+},
+
+scepter:{
+img:"scepter_of_elasticity.png",
+title:"Scepter of Elasticity",
+text:"The royal instrument of the Sovereign. It reveals how strongly quantity demanded responds when price changes."
+}
+
+};
+  
 // Restore saved username if it exists
 const savedUser = localStorage.getItem("gauntletUser");
 if(savedUser){
@@ -458,6 +485,28 @@ function getAreaName(r) {
     return "The Sovereign's Throne";
 }
 
+const artifacts = {
+
+seal:{
+img:"seal_of_preferences.png",
+title:"Seal of Preferences",
+text:"An ancient seal revealing the hidden curves of desire. Where preferences meet the budget constraint, utility is maximized."
+},
+
+prism:{
+img:"prism_of_tradeoffs.png",
+title:"Prism of Tradeoffs",
+text:"This crystal fractures a price change into its two hidden forces: substitution toward cheaper goods and the pull of income on purchasing power."
+},
+
+scepter:{
+img:"scepter_of_elasticity.png",
+title:"Scepter of Elasticity",
+text:"A royal instrument of the Sovereign. It reveals how strongly quantity responds when price changes."
+}
+
+};
+  
 // --- Question Pools follow below ---
 const questionBanks = {
 easyBoss:[
@@ -954,6 +1003,8 @@ function loadQuestion() {
     const gameBox = document.getElementById("gameBox");
     const bossMsg = document.getElementById("bossMessage");
 
+    document.getElementById("artifactDrop").style.display = "none";
+
     // 1. Determine Difficulty and Boss Status
     let diff = (room <= 9) ? "easy" : (room === 10) ? "easyBoss" : (room <= 19) ? "medium" : (room === 20) ? "mediumBoss" : (room <= 25) ? "hard" : (room <= 29) ? "calculation" : "finalBoss";
 if(diff.includes("Boss")){
@@ -1046,6 +1097,30 @@ function answer(choice) {
         localStorage.setItem("gauntletRoom", room);
         setTimeout(loadQuestion, 1000);
         return;
+    }
+
+      if(room === 10){
+        showArtifact(
+        artifacts.seal.img,
+        artifacts.seal.title,
+        artifacts.seal.text
+        );
+    }
+
+        if(room === 20){
+        showArtifact(
+        artifacts.prism.img,
+        artifacts.prism.title,
+        artifacts.prism.text
+        );
+    }
+
+      if(room === 30){
+      showArtifact(
+      artifacts.scepter.img,
+      artifacts.scepter.title,
+      artifacts.scepter.text
+        );
     }
         correctAnswers++;
         streak++;
@@ -1171,6 +1246,21 @@ loadQuestion();
 
 }
   
+function showArtifact(img,title,text){
+
+let drop = document.getElementById("artifactDrop");
+let image = document.getElementById("artifactImage");
+let t = document.getElementById("artifactTitle");
+let p = document.getElementById("artifactText");
+
+image.src = img;
+t.innerText = title;
+p.innerText = text;
+
+drop.style.display = "block";
+
+}
+
 function triggerBossShake(){
 const box = document.getElementById("gameBox");
 box.classList.remove("boss-shake");
