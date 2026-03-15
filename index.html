@@ -495,6 +495,7 @@ let correctAnswers = 0;
 let maxStreak = 0; 
 let username = "";
 let streak = 0; 
+let calcBag = [];
 let startTime; // Will be set in startGame()
 let room = localStorage.getItem("gauntletRoom") ? parseInt(localStorage.getItem("gauntletRoom")) : 1;
 let currentQuestion = null;
@@ -616,16 +617,6 @@ function getAreaName(r) {
 };
   
 // --- Question Pools follow below ---
-const easyPools = {
-definition: questionBanks.easy.filter(q => q.type === "definition"),
-interpretation: questionBanks.easy.filter(q => q.type === "interpretation"),
-trap: questionBanks.easy.filter(q => q.type === "trap")
-};
-const mediumPools = {
-definition: questionBanks.medium.filter(q => q.type === "definition"),
-interpretation: questionBanks.medium.filter(q => q.type === "interpretation"),
-trap: questionBanks.medium.filter(q => q.type === "trap")
-};
   
 const questionBanks = {
 easyBoss:[
@@ -822,7 +813,18 @@ elasticity:[
 {q:"If elasticity is greater than 1, demand is...",options:["Elastic","Inelastic","Unit elastic","Perfectly inelastic"],a:0,feedback:"Elastic demand means quantity demanded responds strongly to price changes."},
 {q:"If elasticity is less than 1, demand is...",options:["Inelastic","Elastic","Unit elastic","Perfectly elastic"],a:0,feedback:"Inelastic demand means quantity demanded responds weakly to price changes."}]
 };
-    
+
+const easyPools = {
+definition: questionBanks.easy.filter(q => q.type === "definition"),
+interpretation: questionBanks.easy.filter(q => q.type === "interpretation"),
+trap: questionBanks.easy.filter(q => q.type === "trap")
+};
+const mediumPools = {
+definition: questionBanks.medium.filter(q => q.type === "definition"),
+interpretation: questionBanks.medium.filter(q => q.type === "interpretation"),
+trap: questionBanks.medium.filter(q => q.type === "trap")
+};
+  
 function randomEasy(){
     let type;
     if(easyCycle === 0) type = "definition";
